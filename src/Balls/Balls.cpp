@@ -24,20 +24,8 @@ Balls::~Balls()
 	Shutdown();
 }
 
-struct Vertex
-{
-	glm::vec2 Position;
-	glm::vec2 TexCoord;
-};
-
 Utils::Shader shader;
 glm::mat4 model;
-Vertex verticies[] = {
-    {{-100, -100}, {0.0f, 0.0f}},
-	{{ 100, -100}, {1.0f, 0.0f}},
-	{{ 100,  100}, {1.0f, 1.0f}},
-	{{-100,  100}, {0.0f, 1.0f}}
-};
 
 void Balls::Init()
 {
@@ -65,7 +53,7 @@ void Balls::Init()
 
 	GLCall(glCreateBuffers(1, &VB));
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, VB));
-	GLCall(glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m_MaxVertexCount, nullptr, GL_DYNAMIC_DRAW));
 
 	GLCall(glEnableVertexArrayAttrib(VA, 0));
 	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position)));
@@ -74,15 +62,17 @@ void Balls::Init()
 	GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord)));
 
 	std::vector<unsigned int> indices;
-	indices.reserve(6);
-	for (int i = 0; i < 1; i += 6)
+	indices.reserve(m_MaxIndexCount);
+	int offset = 0;
+	for (int i = 0; i < m_MaxIndexCount; i += 6)
 	{
-		indices.emplace_back(0);
-		indices.emplace_back(1);
-		indices.emplace_back(2);
-		indices.emplace_back(2);
-		indices.emplace_back(3);
-		indices.emplace_back(0);
+		indices.emplace_back(0 + offset);
+		indices.emplace_back(1 + offset);
+		indices.emplace_back(2 + offset);
+		indices.emplace_back(2 + offset);
+		indices.emplace_back(3 + offset);
+		indices.emplace_back(0 + offset);
+		offset += 4;
 	}
 
 	GLCall(glCreateBuffers(1, &IB));
@@ -94,6 +84,14 @@ void Balls::Init()
 	shader.CreateShader("basic.vert.shader", "basic.frag.shader");
 	shader.Bind();
 	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+
+	// end of opengl
+
+	m_Balls.reserve(m_MaxBallCount);
+	for (int i = 0; i < m_MaxBallCount; i++)
+	{
+		m_Balls.push_back(Ball(rand() % 800 - 399, rand() % 800 - 399, rand() % 100 + 21));
+	}
 }
 
 void Balls::Shutdown()
@@ -114,6 +112,10 @@ void Balls::Update(float deltaTime)
 {
 	camera.Update(deltaTime);
 
+	for (Ball& ball : m_Balls)
+	{
+		ball.Update(deltaTime);
+	}
 }
 
 /*
@@ -123,20 +125,29 @@ void Balls::Draw(float deltaTime)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	GLsizeiptr size = sizeof(verticies);
+	m_Vertices.reserve(m_Balls.size() * 4);
+	glm::vec2 ballPos = { 0,0 };
+	float ballRad = 0;
+	for (Ball &ball : m_Balls)
+	{
+		ballPos = ball.GetPosition();
+		ballRad = ball.GetRadius();
+
+		m_Vertices.push_back({ {ballPos.x - ballRad, ballPos.y - ballRad}, {0.0f, 0.0f} });
+		m_Vertices.push_back({ {ballPos.x + ballRad, ballPos.y - ballRad}, {1.0f, 0.0f} });
+		m_Vertices.push_back({ {ballPos.x + ballRad, ballPos.y + ballRad}, {1.0f, 1.0f} });
+		m_Vertices.push_back({ {ballPos.x - ballRad, ballPos.y + ballRad}, {0.0f, 1.0f} });
+	}
+	
+	// copy CPU side memory to GPU
+	GLsizeiptr size = m_Vertices.size() * sizeof(Vertex);
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, VB));
-	GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, verticies));
+	GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, &m_Vertices[0]));
 
 	GLCall(glBindVertexArray(VA));
 	GLCall(glBindVertexArray(VB));
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
-	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-}
+	GLCall(glDrawElements(GL_TRIANGLES, m_MaxIndexCount, GL_UNSIGNED_INT, nullptr));
 
-//glm::vec2 Balls::GetGameCell(glm::vec2 worldPosition)
-//{
-//	return glm::vec2(
-//		std::floor((worldPosition.x) / ((m_Window->GetWidth() * m_GameAspectRatioMultipliers.x) / static_cast<float>(m_GameWidth))) + m_GameWidth * 0.5f,
-//		std::floor((worldPosition.y) / ((m_Window->GetHeight() * m_GameAspectRatioMultipliers.y) / static_cast<float>(m_GameHeight))) + m_GameHeight * 0.5f
-//	);
-//}
+	m_Vertices.clear();
+}
