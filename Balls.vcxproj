@@ -145,19 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="GoL.frag.shader" />
-    <None Include="GoL.vert.shader" />
-    <None Include="GoLBasic.frag.shader" />
-    <None Include="GoLHeatmap.frag.shader" />
-    <None Include="GoLTrails.frag.shader" />
-    <None Include="grid.vert.shader" />
-    <None Include="grid.frag.shader" />
-    <None Include="noise.frag.shader" />
     <None Include="basic.frag.shader" />
     <None Include="basic.vert.shader" />
-    <None Include="noise.vert.shader" />
-    <None Include="Paint.frag.shader" />
-    <None Include="Paint.vert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Balls\Balls.cpp" />

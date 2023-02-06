@@ -39,39 +39,6 @@
     <None Include="basic.vert.shader">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="GoL.frag.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="noise.frag.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="GoL.vert.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="noise.vert.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Paint.frag.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Paint.vert.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="grid.frag.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="grid.vert.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="GoLHeatmap.frag.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="GoLTrails.frag.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="GoLBasic.frag.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Balls\Source.cpp">

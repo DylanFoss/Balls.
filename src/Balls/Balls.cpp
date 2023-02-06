@@ -144,6 +144,10 @@ void Balls::Draw(float deltaTime)
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, VB));
 	GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, &m_Vertices[0]));
 
+	shader.Bind();
+	glm::mat4 mvp = camera.GetCamera().GetViewProjectionMatrix() * model;
+	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+
 	GLCall(glBindVertexArray(VA));
 	GLCall(glBindVertexArray(VB));
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
