@@ -2,8 +2,8 @@
 #include "pch.h"
 #include <fstream>
 
-#include "Core//MouseCodes.h"
-#include "Core//KeyCodes.h"
+#include "Core/MouseCodes.h"
+#include "Core/KeyCodes.h"
 
 #include "GLErrorHandler.h"
 

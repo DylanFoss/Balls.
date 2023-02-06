@@ -7,7 +7,5 @@ in vec2 v_TexCoord;
 
 void main()
 {
-	float pct = distance(v_TexCoord, vec2(0.5));
-
-	o_Color = vec4(v_TexCoord, 0.0f, pct < 0.5f ? 1.0f : 0.0f);
+	o_Color = vec4(v_TexCoord, 0.0f, distance(v_TexCoord, vec2(0.5)) < 0.5f ? 1.0f : 0.0f);
 };
