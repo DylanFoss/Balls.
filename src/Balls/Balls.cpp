@@ -87,8 +87,8 @@ void Balls::Init()
 
 	// end of opengl
 
-	m_Balls.reserve(3);
-	for (int i = 0; i < 3; i++)
+	m_Balls.reserve(50);
+	for (int i = 0; i < 50; i++)
 	{
 		m_Balls.push_back(Ball(rand() % 800 - 399, rand() % 800 - 399, rand() % 100 + 21));
 	}
@@ -112,9 +112,48 @@ void Balls::Update(float deltaTime)
 {
 	camera.Update(deltaTime);
 
-	for (Ball& ball : m_Balls)
+	
+
+	if (Input::Get().IsMouseHeld(KC_MOUSE_BUTTON_LEFT))
 	{
-		ball.Update(deltaTime);
+		glm::vec2 pos = { Input::Get().GetMousePos().first, Input::Get().GetMousePos().second };
+		m_Balls[0].SetPosition(camera.ScreenToWorldSpace(pos));
+	}
+
+	for (int i = 0; i < m_Balls.size(); i++)
+	{
+		m_Balls[i].Update(deltaTime);
+	}
+
+	auto circleOverlap = [](Ball& ballA, Ball& ballB)
+	{
+		return fabs((ballA.PosX() - ballB.PosX()) * (ballA.PosX() - ballB.PosX())
+			+ (ballA.PosY() - ballB.PosY()) * (ballA.PosY() - ballB.PosY())
+			<= (ballA.Radius() + ballB.Radius()) * (ballA.Radius() + ballB.Radius()));
+	};
+
+	for (int i = 0; i < m_Balls.size(); i++)
+	{
+		for (int j = 0; j < m_Balls.size(); j++)
+		{
+			if (j != i)
+			{
+				if (circleOverlap(m_Balls[i], m_Balls[j]))
+				{
+					float fDistance = sqrtf((m_Balls[i].PosX() - m_Balls[j].PosX()) 
+						* (m_Balls[i].PosX() - m_Balls[j].PosX()) 
+						+ (m_Balls[i].PosY() - m_Balls[j].PosY()) * 
+							(m_Balls[i].PosY() - m_Balls[j].PosY())
+							);
+					float fOverlap = 0.5f * (fDistance - m_Balls[i].Radius() - m_Balls[j].Radius());
+
+					m_Balls[i].SetPosX(m_Balls[i].PosX() - fOverlap * (m_Balls[i].PosX() - m_Balls[j].PosX()) / fDistance);
+					m_Balls[i].SetPosY(m_Balls[i].PosY() - fOverlap * (m_Balls[i].PosY() - m_Balls[j].PosY()) / fDistance);
+				}
+			}
+
+			//ball.Update(deltaTime);
+		}
 	}
 }
 
@@ -130,8 +169,8 @@ void Balls::Draw(float deltaTime)
 	float ballRad = 0;
 	for (Ball &ball : m_Balls)
 	{
-		ballPos = ball.GetPosition();
-		ballRad = ball.GetRadius();
+		ballPos = ball.Position();
+		ballRad = ball.Radius();
 
 		m_Vertices.push_back({ {ballPos.x - ballRad, ballPos.y - ballRad}, {0.0f, 0.0f} });
 		m_Vertices.push_back({ {ballPos.x + ballRad, ballPos.y - ballRad}, {1.0f, 0.0f} });
