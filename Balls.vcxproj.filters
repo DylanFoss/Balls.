@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{c7136d3d-f648-4c66-9fb6-e3a42f6a2e2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Balls">
+      <UniqueIdentifier>{c8be38e3-fd96-42ed-aa58-c4890e753695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{eb40ece8-358b-4dce-bb82-2779e80f9f92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Core">
+      <UniqueIdentifier>{624d1500-453b-421c-a8f3-50d8ae207d74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Utils">
+      <UniqueIdentifier>{8992024f-f939-4467-be65-2e88b14d705b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Events">
+      <UniqueIdentifier>{15a516c5-f239-4dca-b42c-d1833bedb366}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="basic.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="basic.vert.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="GoL.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="noise.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="GoL.vert.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="noise.vert.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Paint.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Paint.vert.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="grid.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="grid.vert.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="GoLHeatmap.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="GoLTrails.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="GoLBasic.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Balls\Source.cpp">
+      <Filter>Source Files\Balls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Balls\Balls.cpp">
+      <Filter>Source Files\Balls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\Application.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\Input.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\Window.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Util\OrthographicCamera.cpp">
+      <Filter>Source Files\Engine\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Util\OrthographicCameraController.cpp">
+      <Filter>Source Files\Engine\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Util\Shader.cpp">
+      <Filter>Source Files\Engine\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\GLErrorHandler.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Balls\Balls.h">
+      <Filter>Source Files\Balls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Application.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Input.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\KeyCodes.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\MouseCodes.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\TimeStep.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Window.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\Event.h">
+      <Filter>Source Files\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\KeyEvent.h">
+      <Filter>Source Files\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\MouseEvent.h">
+      <Filter>Source Files\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\WindowEvent.h">
+      <Filter>Source Files\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Util\OrthographicCamera.h">
+      <Filter>Source Files\Engine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Util\OrthographicCameraController.h">
+      <Filter>Source Files\Engine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Util\Shader.h">
+      <Filter>Source Files\Engine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\GL.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\GLErrorHandler.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\GLUtils.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\pch.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
