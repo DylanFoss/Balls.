@@ -39,9 +39,9 @@ private:
     GLuint VB = 0;
     GLuint IB = 0;
 
-    size_t m_MaxBallCount = 100;
-    size_t m_MaxVertexCount = m_MaxBallCount * 4;
-    size_t m_MaxIndexCount = m_MaxBallCount * 6;
+    size_t m_MaxQuadCount = 1000;
+    size_t m_MaxVertexCount = m_MaxQuadCount * 4;
+    size_t m_MaxIndexCount = m_MaxQuadCount * 6;
 
    // glm::vec2 GetGameCell(glm::vec2 worldPosition);
 };

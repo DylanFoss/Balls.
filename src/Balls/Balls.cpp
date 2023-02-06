@@ -87,8 +87,8 @@ void Balls::Init()
 
 	// end of opengl
 
-	m_Balls.reserve(m_MaxBallCount);
-	for (int i = 0; i < m_MaxBallCount; i++)
+	m_Balls.reserve(100);
+	for (int i = 0; i < 100; i++)
 	{
 		m_Balls.push_back(Ball(rand() % 800 - 399, rand() % 800 - 399, rand() % 100 + 21));
 	}
