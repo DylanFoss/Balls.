@@ -1,14 +1,7 @@
 #pragma once
 #include "GL.h"
 #include "GLRenderer.h"
-
 #include "Ball.h"
-
-struct Vertex
-{
-    glm::vec2 Position;
-    glm::vec2 TexCoord;
-};
 
 class Balls:
     public Application
