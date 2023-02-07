@@ -13,7 +13,7 @@ Balls::Balls(const std::string& name, uint32_t width, uint32_t height)
 	float windowAspect = static_cast<float>(m_Window->GetWidth()) / static_cast<float>(m_Window->GetHeight());
 	//float multiplier = m_GameAspect / windowAspect;
 
-	camera = Utils::OrthographicCameraController(m_WindowHalfWidth, m_WindowHalfHeight);
+	camera = OrthographicCameraController(m_WindowHalfWidth, m_WindowHalfHeight);
     //camera.SetMaxZoom(10.0f / static_cast<float>(gameHeight));
 
 	Init();
@@ -24,7 +24,7 @@ Balls::~Balls()
 	Shutdown();
 }
 
-Utils::Shader shader;
+Shader shader;
 glm::mat4 model;
 
 void Balls::Init()

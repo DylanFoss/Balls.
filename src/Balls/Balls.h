@@ -1,6 +1,6 @@
 #pragma once
 #include "GL.h"
-#include "GLUtils.h"
+#include "GLRenderer.h"
 
 #include "Ball.h"
 
@@ -28,7 +28,7 @@ private:
     int32_t m_WindowHalfWidth;
     int32_t m_WindowHalfHeight;
 
-    Utils::OrthographicCameraController camera = Utils::OrthographicCameraController(400.0f);
+    OrthographicCameraController camera = OrthographicCameraController(400.0f);
 
     bool m_IsPaused = false;
 

@@ -1,8 +1,6 @@
 #pragma once
 #include "OrthographicCamera.h"
 
-namespace Utils {
-
 class OrthographicCameraController
 {
 public:
@@ -36,6 +34,4 @@ private:
 	float m_CameraTranslationSpeed = 1.0f;
 
 };
-
-}
 

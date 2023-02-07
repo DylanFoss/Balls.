@@ -2,8 +2,6 @@
 
 #include <glm/glm.hpp>
 
-namespace Utils {
-
 class OrthographicCamera
 {
 public:
@@ -30,6 +28,4 @@ private:
 	glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
 	
 };
-
-}
 

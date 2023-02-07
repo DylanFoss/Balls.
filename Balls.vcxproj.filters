@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Engine\Events">
       <UniqueIdentifier>{15a516c5-f239-4dca-b42c-d1833bedb366}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\Renderer">
+      <UniqueIdentifier>{798c70fd-bf99-452b-bba0-84f7b6bba0dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="basic.frag.shader">
@@ -56,20 +59,23 @@
     <ClCompile Include="src\Engine\Core\Window.cpp">
       <Filter>Source Files\Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Util\OrthographicCamera.cpp">
-      <Filter>Source Files\Engine\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Engine\Util\OrthographicCameraController.cpp">
-      <Filter>Source Files\Engine\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Engine\Util\Shader.cpp">
-      <Filter>Source Files\Engine\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\GLErrorHandler.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="src\Balls\Ball.cpp">
       <Filter>Source Files\Balls</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\OrthographicCamera.cpp">
+      <Filter>Source Files\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\OrthographicCameraController.cpp">
+      <Filter>Source Files\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\Renderer2D.cpp">
+      <Filter>Source Files\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\Shader.cpp">
+      <Filter>Source Files\Engine\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,22 +112,13 @@
     <ClInclude Include="src\Engine\Events\WindowEvent.h">
       <Filter>Source Files\Engine\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Util\OrthographicCamera.h">
-      <Filter>Source Files\Engine\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Util\OrthographicCameraController.h">
-      <Filter>Source Files\Engine\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Util\Shader.h">
-      <Filter>Source Files\Engine\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\GL.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\GLErrorHandler.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\GLUtils.h">
+    <ClInclude Include="src\Engine\GLRenderer.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\pch.h">
@@ -129,6 +126,18 @@
     </ClInclude>
     <ClInclude Include="src\Balls\Ball.h">
       <Filter>Source Files\Balls</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\OrthographicCamera.h">
+      <Filter>Source Files\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\OrthographicCameraController.h">
+      <Filter>Source Files\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\Renderer2D.h">
+      <Filter>Source Files\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\Shader.h">
+      <Filter>Source Files\Engine\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

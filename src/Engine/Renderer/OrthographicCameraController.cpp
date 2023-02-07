@@ -4,12 +4,12 @@
 #include "Core/KeyCodes.h"
 #include "Core/MouseCodes.h"
 
-Utils::OrthographicCameraController::OrthographicCameraController(float orthoX, float orthoY)
+OrthographicCameraController::OrthographicCameraController(float orthoX, float orthoY)
 	:m_OrthoX(orthoX), m_OrthoY(orthoY), m_Camera(-orthoX * m_Zoom, orthoX* m_Zoom, -orthoY * m_Zoom, orthoY* m_Zoom)
 {
 }
 
-void Utils::OrthographicCameraController::Update(float deltaTime)
+void OrthographicCameraController::Update(float deltaTime)
 {
 	if (Input::Get().IsKeyHeld(KC_KEY_A))
 	{
@@ -91,7 +91,7 @@ void Utils::OrthographicCameraController::Update(float deltaTime)
 	m_CameraTranslationSpeed = m_Zoom;
 }
 
-glm::vec2 Utils::OrthographicCameraController::ScreenToWorldSpace(glm::vec2 screenPoint)
+glm::vec2 OrthographicCameraController::ScreenToWorldSpace(glm::vec2 screenPoint)
 {
 	return glm::vec2(
 		((screenPoint.x - m_OrthoX)) * m_Zoom + m_Camera.GetPosition().x,
@@ -99,7 +99,7 @@ glm::vec2 Utils::OrthographicCameraController::ScreenToWorldSpace(glm::vec2 scre
 	);
 }
 
-glm::vec2 Utils::OrthographicCameraController::WorldToScreenSpace(glm::vec2 worldPoint)
+glm::vec2 OrthographicCameraController::WorldToScreenSpace(glm::vec2 worldPoint)
 {
 	return glm::vec2(
 		static_cast<int>(((worldPoint.x + m_OrthoX) - m_Camera.GetPosition().x) / m_Zoom),

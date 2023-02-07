@@ -156,9 +156,10 @@
     <ClCompile Include="src\Engine\Core\Input.cpp" />
     <ClCompile Include="src\Engine\Core\Window.cpp" />
     <ClCompile Include="src\Engine\GLErrorHandler.cpp" />
-    <ClCompile Include="src\Engine\Util\OrthographicCamera.cpp" />
-    <ClCompile Include="src\Engine\Util\OrthographicCameraController.cpp" />
-    <ClCompile Include="src\Engine\Util\Shader.cpp" />
+    <ClCompile Include="src\Engine\Renderer\OrthographicCamera.cpp" />
+    <ClCompile Include="src\Engine\Renderer\OrthographicCameraController.cpp" />
+    <ClCompile Include="src\Engine\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\Engine\Renderer\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Balls\Balls.h" />
@@ -175,11 +176,12 @@
     <ClInclude Include="src\Engine\Events\WindowEvent.h" />
     <ClInclude Include="src\Engine\GL.h" />
     <ClInclude Include="src\Engine\GLErrorHandler.h" />
-    <ClInclude Include="src\Engine\GLUtils.h" />
+    <ClInclude Include="src\Engine\GLRenderer.h" />
     <ClInclude Include="src\Engine\pch.h" />
-    <ClInclude Include="src\Engine\Util\OrthographicCamera.h" />
-    <ClInclude Include="src\Engine\Util\OrthographicCameraController.h" />
-    <ClInclude Include="src\Engine\Util\Shader.h" />
+    <ClInclude Include="src\Engine\Renderer\OrthographicCamera.h" />
+    <ClInclude Include="src\Engine\Renderer\OrthographicCameraController.h" />
+    <ClInclude Include="src\Engine\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Engine\Renderer\Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

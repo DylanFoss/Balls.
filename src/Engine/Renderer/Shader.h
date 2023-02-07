@@ -2,8 +2,6 @@
 #include "GL/glew.h"
 #include <string>
 
-namespace Utils{
-
 struct ShaderSource
 {
 	uint32_t type;
@@ -32,5 +30,3 @@ private:
 	GLuint CompileShader(const ShaderSource& shaderSource);
 
 };
-
-}

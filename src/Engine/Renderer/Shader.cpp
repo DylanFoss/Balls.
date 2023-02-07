@@ -3,7 +3,6 @@
 
 #include <fstream>
 
-namespace Utils{
 Shader::Shader()
 	:m_ShaderID(0)
 {
@@ -104,6 +103,4 @@ void Shader::Bind()
 void Shader::Unbind()
 {
 	glUseProgram(0);
-}
-
 }
