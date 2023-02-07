@@ -3,21 +3,21 @@
 Ball::Ball(float positionX, float positionY, float radius)
 	:m_Position({ positionX, positionY }), m_Velocity({ 0, 0 }), m_Acceleration({ 0, 0 }), m_Radius(radius)
 {
-	glm::vec2 radian = { rand() % 3, rand() % 3 };
-	m_Velocity.x -= cos(glm::radians(radian.x));
-	m_Velocity.y -= sin(glm::radians(radian.y));
+	m_Velocity.x -= rand() % 600 - 300;
+	m_Velocity.y -= rand() % 600 - 300;
 }
 
 void Ball::Update(float deltaTime)
 {
-	m_Position += glm::vec2{ 0.5, 0.5 } * m_Velocity;
+	m_Velocity = m_Velocity + m_Acceleration * deltaTime;
+	m_Position = m_Position + m_Velocity * deltaTime;
 
-	if (m_Position.x > 400 + m_Radius)
-		m_Position.x = -400 - m_Radius;
-	if (m_Position.y > 400 + m_Radius)
-		m_Position.y = -400 - m_Radius;
-	if (m_Position.x < -400 - m_Radius)
-		m_Position.x = 400 + m_Radius;
-	if (m_Position.y < -400 - m_Radius)
-		m_Position.y = 400 + m_Radius;
+	if (m_Position.x >  500 + m_Radius)
+		m_Position.x = -500 - m_Radius;
+	if (m_Position.y >  500 + m_Radius)
+		m_Position.y = -500 - m_Radius;
+	if (m_Position.x < -500 - m_Radius)
+		m_Position.x =  500 + m_Radius;
+	if (m_Position.y < -500 - m_Radius)
+		m_Position.y =  500 + m_Radius;
 }
