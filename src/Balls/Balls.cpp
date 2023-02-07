@@ -110,9 +110,23 @@ void Balls::Shutdown()
 */
 void Balls::Update(float deltaTime)
 {
-	camera.Update(deltaTime);
+	auto distance = [](glm::vec2 point1, glm::vec2 point2)
+	{
+		return glm::sqrt(((point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y)));
+	};
 
-	
+	auto distanceSqr = [](glm::vec2 point1, glm::vec2 point2)
+	{
+		return (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y);
+	};
+
+
+	auto circleOverlap = [&](Ball& ballA, Ball& ballB)
+	{
+		return fabs(distanceSqr(ballA.Position(), ballB.Position()) <= (ballA.Radius() + ballB.Radius()) * (ballA.Radius() + ballB.Radius()));
+	};
+
+	camera.Update(deltaTime);
 
 	if (Input::Get().IsMouseHeld(KC_MOUSE_BUTTON_LEFT))
 	{
@@ -125,12 +139,9 @@ void Balls::Update(float deltaTime)
 		m_Balls[i].Update(deltaTime);
 	}
 
-	auto circleOverlap = [](Ball& ballA, Ball& ballB)
-	{
-		return fabs((ballA.PosX() - ballB.PosX()) * (ballA.PosX() - ballB.PosX())
-			+ (ballA.PosY() - ballB.PosY()) * (ballA.PosY() - ballB.PosY())
-			<= (ballA.Radius() + ballB.Radius()) * (ballA.Radius() + ballB.Radius()));
-	};
+	std::vector<std::pair<Ball*, Ball*>> collidingBalls;
+
+	// check collisions
 
 	for (int i = 0; i < m_Balls.size(); i++)
 	{
@@ -139,22 +150,28 @@ void Balls::Update(float deltaTime)
 			if (j != i)
 			{
 				if (circleOverlap(m_Balls[i], m_Balls[j]))
-				{
-					float fDistance = sqrtf((m_Balls[i].PosX() - m_Balls[j].PosX()) 
-						* (m_Balls[i].PosX() - m_Balls[j].PosX()) 
-						+ (m_Balls[i].PosY() - m_Balls[j].PosY()) * 
-							(m_Balls[i].PosY() - m_Balls[j].PosY())
-							);
-					float fOverlap = 0.5f * (fDistance - m_Balls[i].Radius() - m_Balls[j].Radius());
-
-					m_Balls[i].SetPosX(m_Balls[i].PosX() - fOverlap * (m_Balls[i].PosX() - m_Balls[j].PosX()) / fDistance);
-					m_Balls[i].SetPosY(m_Balls[i].PosY() - fOverlap * (m_Balls[i].PosY() - m_Balls[j].PosY()) / fDistance);
-				}
+					collidingBalls.push_back(std::pair<Ball*, Ball*>(&m_Balls[i], &m_Balls[j]));
 			}
-
-			//ball.Update(deltaTime);
 		}
 	}
+
+	// resolve collisions
+
+	for (auto pair : collidingBalls)
+	{
+		Ball* ball = pair.first;
+		Ball* target = pair.second;
+
+		float fDistance = distance(ball->Position(), target->Position());
+		float fOverlap = 0.5f * (fDistance - ball->Radius() - target->Radius());
+
+		ball->SetPosX(ball->PosX() - fOverlap * (ball->PosX() - target->PosX()) / fDistance);
+		ball->SetPosY(ball->PosY() - fOverlap * (ball->PosY() - target->PosY()) / fDistance);
+
+		target->SetPosX(target->PosX() + fOverlap * (ball->PosX() - target->PosX()) / fDistance);
+		target->SetPosY(target->PosY() + fOverlap * (ball->PosY() - target->PosY()) / fDistance);
+	}
+
 }
 
 /*
