@@ -102,6 +102,7 @@ void Renderer2D::StartFrame(OrthographicCamera& camera)
 
 void Renderer2D::EndFrame()
 {
+	EndBatch();
 	Flush();
 }
 
@@ -129,6 +130,8 @@ void Renderer2D::Flush()
 	GLCall(glBindVertexArray(s_Data.QuadVB));
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.QuadIB));
 	GLCall(glDrawElements(GL_TRIANGLES, s_Data.MaxIndices, GL_UNSIGNED_INT, nullptr));
+
+	s_Data.QuadIndexCount = 0;
 }
 
 void Renderer2D::DrawQuad(const glm::vec2 position, glm::vec2 size)
@@ -166,7 +169,7 @@ void Renderer2D::DrawQuad(const glm::mat4 position, glm::vec2 size)
 
 	for (int i = 0; i < numVerts; i++)
 	{
-		s_Data.QuadVertexBufferPtr->Position = position + (size * s_Data.QuadVertexPositions[i]);
+		/*s_Data.QuadVertexBufferPtr->Position = position + (size * s_Data.QuadVertexPositions[i]);*/
 		s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
 		s_Data.QuadVertexBufferPtr++;
 	}
