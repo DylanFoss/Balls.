@@ -17,6 +17,7 @@ Balls::Balls(const std::string& name, uint32_t width, uint32_t height)
     //camera.SetMaxZoom(10.0f / static_cast<float>(gameHeight));
 
 	Init();
+	glLineWidth(1.0);
 }
 
 Balls::~Balls()
