@@ -119,6 +119,8 @@ void Balls::Draw(float deltaTime)
 	for (Ball &ball : m_Balls)
 		Renderer2D::DrawQuad(ball.Position(), { ball.Radius() * 2, ball.Radius() * 2 });
 
+	for (auto& pair : m_CollidingBalls)
+		Renderer2D::DrawLine(pair.first->Position(), pair.second->Position(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	Renderer2D::EndFrame();
 }
