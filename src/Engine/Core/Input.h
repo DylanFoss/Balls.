@@ -11,6 +11,7 @@ public:
 
 	bool IsKeyPressed(int key) const;
 	bool IsKeyHeld(int key) const;
+	bool IsKeyReleased(int key) const;
 
 	void MouseButtonsDown(int button);
 	void MouseButtonsUp(int button);
@@ -18,6 +19,7 @@ public:
 
 	bool IsMousePressed(int button) const;
 	bool IsMouseHeld(int button) const;
+	bool IsMouseReleased (int button) const;
 
 	void MousePosition(int x, int y);
 	std::pair<int, int> GetMousePos() const;

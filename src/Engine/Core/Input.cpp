@@ -33,6 +33,11 @@ bool Input::IsKeyHeld(int key) const
 	return m_KeyStates[key] && m_KeyStatesOld[key];
 }
 
+bool Input::IsKeyReleased(int key) const
+{
+	return !m_KeyStates[key] && m_KeyStatesOld[key];
+}
+
 bool Input::IsMousePressed(int button) const
 {
 	return m_MouseStates[button] && !m_MouseStatesOld[button];
@@ -42,6 +47,12 @@ bool Input::IsMouseHeld(int button) const
 {
 	return m_MouseStates[button] && m_MouseStatesOld[button];
 }
+
+bool Input::IsMouseReleased(int button) const
+{
+	return !m_MouseStates[button] && m_MouseStatesOld[button];
+}
+
 
 std::pair<int, int> Input::GetMousePos() const
 {
