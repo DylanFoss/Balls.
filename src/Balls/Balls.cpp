@@ -77,10 +77,8 @@ void Balls::Update(float deltaTime)
 		m_Balls[i].Update(deltaTime);
 	}
 
-	std::vector<std::pair<Ball*, Ball*>> collidingBalls;
-
 	// check collisions
-
+	m_CollidingBalls.clear();
 	for (int i = 0; i < m_Balls.size(); i++)
 	{
 		for (int j = 0; j < m_Balls.size(); j++)
@@ -88,14 +86,14 @@ void Balls::Update(float deltaTime)
 			if (j != i)
 			{
 				if (circleOverlap(m_Balls[i], m_Balls[j]))
-					collidingBalls.push_back(std::pair<Ball*, Ball*>(&m_Balls[i], &m_Balls[j]));
+					m_CollidingBalls.push_back(std::pair<Ball*, Ball*>(&m_Balls[i], &m_Balls[j]));
 			}
 		}
 	}
 
 	// resolve collisions
 
-	for (auto pair : collidingBalls)
+	for (auto pair : m_CollidingBalls)
 	{
 		Ball* ball = pair.first;
 		Ball* target = pair.second;
@@ -109,6 +107,7 @@ void Balls::Update(float deltaTime)
 		target->SetPosX(target->PosX() + fOverlap * (ball->PosX() - target->PosX()) / fDistance);
 		target->SetPosY(target->PosY() + fOverlap * (ball->PosY() - target->PosY()) / fDistance);
 	}
+
 }
 
 void Balls::Draw(float deltaTime)
@@ -118,9 +117,8 @@ void Balls::Draw(float deltaTime)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	for (Ball &ball : m_Balls)
-	{
 		Renderer2D::DrawQuad(ball.Position(), { ball.Radius() * 2, ball.Radius() * 2 });
-	}
+
 
 	Renderer2D::EndFrame();
 }

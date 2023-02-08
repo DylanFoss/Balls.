@@ -9,15 +9,15 @@ Ball::Ball(float positionX, float positionY, float radius)
 
 void Ball::Update(float deltaTime)
 {
-	m_Velocity = m_Velocity + m_Acceleration * deltaTime;
-	m_Position = m_Position + m_Velocity * deltaTime;
+	//m_Velocity = m_Velocity + m_Acceleration * deltaTime;
+	//m_Position = m_Position + m_Velocity * deltaTime;
 
-	if (m_Position.x >  500 + m_Radius)
-		m_Position.x = -500 - m_Radius;
-	if (m_Position.y >  500 + m_Radius)
-		m_Position.y = -500 - m_Radius;
-	if (m_Position.x < -500 - m_Radius)
-		m_Position.x =  500 + m_Radius;
-	if (m_Position.y < -500 - m_Radius)
-		m_Position.y =  500 + m_Radius;
+	//if (m_Position.x >  500 + m_Radius)
+	//	m_Position.x = -500 - m_Radius;
+	//if (m_Position.y >  500 + m_Radius)
+	//	m_Position.y = -500 - m_Radius;
+	//if (m_Position.x < -500 - m_Radius)
+	//	m_Position.x =  500 + m_Radius;
+	//if (m_Position.y < -500 - m_Radius)
+	//	m_Position.y =  500 + m_Radius;
 }
