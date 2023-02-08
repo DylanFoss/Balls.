@@ -1,12 +1,5 @@
 #include "Renderer/OrthographicCamera.h"
 
-struct Vertex
-{
-	glm::vec2 Position;
-	glm::vec2 TexCoord;
-};
-
-
 class Renderer2D
 {
 public:

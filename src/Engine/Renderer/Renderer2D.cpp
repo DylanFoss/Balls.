@@ -6,6 +6,12 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
+struct Vertex
+{
+	glm::vec2 Position;
+	glm::vec2 TexCoord;
+};
+
 struct RenderData
 {
 	static const uint32_t MaxQuads = 1000;
