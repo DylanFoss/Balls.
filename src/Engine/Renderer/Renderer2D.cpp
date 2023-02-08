@@ -234,7 +234,7 @@ void Renderer2D::DrawQuad(const glm::mat4& transform)
 
 void Renderer2D::DrawLine(const glm::vec2& point0, const glm::vec2& point1, const glm::vec4& color)
 {
-	if (s_Data.LineVertexCount >= s_Data.MaxIndices)
+	if (s_Data.LineVertexCount >= s_Data.MaxVertices)
 	{
 		Flush();
 		BeginBatch();
