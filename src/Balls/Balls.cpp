@@ -64,7 +64,7 @@ void Balls::Update(float deltaTime)
 
 	auto circleOverlap = [&](Ball& ballA, Ball& ballB)
 	{
-		return fabs(distanceSqr(ballA.Position(), ballB.Position()) <= (ballA.Radius() + ballB.Radius()) * (ballA.Radius() + ballB.Radius()));
+		return distanceSqr(ballA.Position(), ballB.Position()) <= (ballA.Radius() + ballB.Radius()) * (ballA.Radius() + ballB.Radius());
 	};
 
 	camera.Update(deltaTime);
