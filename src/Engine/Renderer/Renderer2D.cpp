@@ -145,7 +145,6 @@ void Renderer2D::StartFrame(const OrthographicCamera& camera)
 
 void Renderer2D::EndFrame()
 {
-	EndBatch();
 	Flush();
 }
 
@@ -170,20 +169,29 @@ void Renderer2D::EndBatch()
 
 void Renderer2D::Flush()
 {
-	//Draw
-	s_Data.QuadShader->Bind();
-	glm::mat4 mvp = s_Data.ViewProjection;
-	GLCall(glUniformMatrix4fv(glGetUniformLocation(s_Data.QuadShader->ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+	if (s_Data.QuadIndexCount)
+	{
+		GLsizeiptr size = (uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferArray;
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, s_Data.QuadVB));
+		GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.QuadVertexBufferArray));
 
-	GLCall(glBindVertexArray(s_Data.QuadVA));
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, s_Data.QuadVB));
-	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.QuadIB));
-	GLCall(glDrawElements(GL_TRIANGLES, s_Data.MaxIndices, GL_UNSIGNED_INT, nullptr));
+		s_Data.QuadShader->Bind();
+		glm::mat4 mvp = s_Data.ViewProjection;
+		GLCall(glUniformMatrix4fv(glGetUniformLocation(s_Data.QuadShader->ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
 
-	s_Data.QuadIndexCount = 0;
+		GLCall(glBindVertexArray(s_Data.QuadVA));
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, s_Data.QuadVB));
+		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.QuadIB));
+		GLCall(glDrawElements(GL_TRIANGLES, s_Data.MaxIndices, GL_UNSIGNED_INT, nullptr));
+
+		s_Data.QuadIndexCount = 0;
+	}
 
 	if (s_Data.LineVertexCount)
 	{
+		GLsizeiptr size = (uint8_t*)s_Data.LineVertexBufferPtr - (uint8_t*)s_Data.LineVertexBufferArray;
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, s_Data.LineVB));
+		GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.LineVertexBufferArray));
 
 		s_Data.LineShader->Bind();
 		glm::mat4 mvp = s_Data.ViewProjection;
@@ -206,9 +214,8 @@ void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size)
 
 void Renderer2D::DrawQuad(const glm::mat4& transform)
 {
-	if (s_Data.QuadIndexCount >= s_Data.MaxIndices)//|| do texture slot checks here)
+	if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
 	{
-		EndBatch();
 		Flush();
 		BeginBatch();
 	}
@@ -227,9 +234,8 @@ void Renderer2D::DrawQuad(const glm::mat4& transform)
 
 void Renderer2D::DrawLine(const glm::vec2& point0, const glm::vec2& point1, const glm::vec4& color)
 {
-	if (s_Data.LineVertexCount >= s_Data.MaxIndices)//|| do texture slot checks here)
+	if (s_Data.LineVertexCount >= s_Data.MaxIndices)
 	{
-		EndBatch();
 		Flush();
 		BeginBatch();
 	}
