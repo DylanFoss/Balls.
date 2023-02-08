@@ -147,6 +147,8 @@
   <ItemGroup>
     <None Include="basic.frag.shader" />
     <None Include="basic.vert.shader" />
+    <None Include="line.frag.shader" />
+    <None Include="line.vert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Balls\Balls.cpp" />

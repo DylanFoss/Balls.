@@ -26,7 +26,7 @@ private:
     bool m_IsPaused = false;
 
     std::vector<Ball> m_Balls;
-    std::vector<Vertex> m_Vertices;
+    std::vector<std::pair<Ball*, Ball*>> m_CollidingBalls;
 
     GLuint VA = 0;
     GLuint VB = 0;

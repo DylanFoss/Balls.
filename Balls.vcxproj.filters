@@ -42,6 +42,12 @@
     <None Include="basic.vert.shader">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="line.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="line.vert.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Balls\Source.cpp">

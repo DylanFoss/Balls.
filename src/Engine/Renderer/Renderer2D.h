@@ -1,12 +1,5 @@
 #include "Renderer/OrthographicCamera.h"
 
-struct Vertex
-{
-	glm::vec2 Position;
-	glm::vec2 TexCoord;
-};
-
-
 class Renderer2D
 {
 public:
@@ -14,15 +7,17 @@ public:
 	static void Init();
 	static void Shutdown();
 
-	static void StartFrame(OrthographicCamera& camera);
+	static void StartFrame(const OrthographicCamera& camera);
 	static void EndFrame();
 
 	static void BeginBatch();
 	static void EndBatch();
 	static void Flush();
 
-	static void DrawQuad(const glm::vec2 position, glm::vec2 size);
-	static void DrawQuad(const glm::mat4 transform, glm::vec2 size);
+	static void DrawQuad(const glm::vec2& position, const glm::vec2& size);
+	static void DrawQuad(const glm::mat4& transform);
+
+	static void DrawLine(const glm::vec2& point0, const glm::vec2& point1, const glm::vec4& color);
 
 	struct PerformanceData
 	{
