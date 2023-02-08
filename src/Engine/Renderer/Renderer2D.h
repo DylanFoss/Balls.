@@ -22,7 +22,7 @@ public:
 	static void Flush();
 
 	static void DrawQuad(const glm::vec2 position, glm::vec2 size);
-	static void DrawQuad(const glm::mat4 transform, glm::vec2 size);
+	static void DrawQuad(const glm::mat4 transform);
 
 	struct PerformanceData
 	{

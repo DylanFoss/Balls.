@@ -4,6 +4,8 @@
 
 #include "GLErrorHandler.h"
 
+#include "glm/gtc/matrix_transform.hpp"
+
 struct RenderData
 {
 	static const uint32_t MaxQuads = 1000;
@@ -20,7 +22,7 @@ struct RenderData
 	Vertex* QuadVertexBufferArray = nullptr;
 	Vertex* QuadVertexBufferPtr = nullptr;
 
-	glm::vec2 QuadVertexPositions[4];
+	glm::vec4 QuadVertexPositions[4];
 
 	Renderer2D::PerformanceData stats;
 	glm::mat4 ViewProjection;
@@ -80,10 +82,10 @@ void Renderer2D::Init()
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.QuadIB));
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW));
 
-	s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f};
-	s_Data.QuadVertexPositions[1] = {  0.5f, -0.5f};
-	s_Data.QuadVertexPositions[2] = {  0.5f,  0.5f};
-	s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f};
+	s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f};
+	s_Data.QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f};
+	s_Data.QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f};
+	s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f};
 
 	s_Data.QuadShader = std::make_shared<Shader>();
 	s_Data.QuadShader->CreateShader("basic.vert.shader", "basic.frag.shader");
@@ -136,26 +138,13 @@ void Renderer2D::Flush()
 
 void Renderer2D::DrawQuad(const glm::vec2 position, glm::vec2 size)
 {
-	if (s_Data.QuadIndexCount >= s_Data.MaxIndices)//|| do texture slot checks here)
-	{
-		EndBatch();
-		Flush();
-		BeginBatch();
-	}
+	glm::mat4 transform = glm::translate(glm::mat4(1.0f), {position.x, position.y, 0.0f})
+		* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-	constexpr glm::vec2 texCoords[4] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
-	constexpr int numVerts = 4;
-
-	for (int i = 0; i < numVerts; i++)
-	{
-		s_Data.QuadVertexBufferPtr->Position = position + (size*s_Data.QuadVertexPositions[i]);
-		s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
-		s_Data.QuadVertexBufferPtr++;
-	}
-	s_Data.QuadIndexCount += 6;
+	DrawQuad(transform);
 }
 
-void Renderer2D::DrawQuad(const glm::mat4 position, glm::vec2 size)
+void Renderer2D::DrawQuad(const glm::mat4 transform)
 {
 	if (s_Data.QuadIndexCount >= s_Data.MaxIndices)//|| do texture slot checks here)
 	{
@@ -169,7 +158,7 @@ void Renderer2D::DrawQuad(const glm::mat4 position, glm::vec2 size)
 
 	for (int i = 0; i < numVerts; i++)
 	{
-		/*s_Data.QuadVertexBufferPtr->Position = position + (size * s_Data.QuadVertexPositions[i]);*/
+		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[i];
 		s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
 		s_Data.QuadVertexBufferPtr++;
 	}
