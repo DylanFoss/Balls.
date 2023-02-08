@@ -7,6 +7,8 @@
 
 #include "GLErrorHandler.h"
 
+#include "glm/common.hpp"
+
 Balls::Balls(const std::string& name, uint32_t width, uint32_t height)
 	:Application(name, width, height), m_WindowHalfHeight(m_Window->GetHeight() * 0.5f), m_WindowHalfWidth(m_Window->GetWidth() * 0.5f)
 {
@@ -69,8 +71,41 @@ void Balls::Update(float deltaTime)
 
 	if (Input::Get().IsMouseHeld(KC_MOUSE_BUTTON_LEFT))
 	{
-		glm::vec2 pos = { Input::Get().GetMousePos().first, Input::Get().GetMousePos().second };
-		m_Balls[0].SetPosition(camera.ScreenToWorldSpace(pos));
+		glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
+
+		for (Ball& ball : m_Balls)
+		{
+			if (distance(pos, ball.Position()) < ball.Radius())
+			{
+				ball.SetPosition(pos);
+				break;
+			}
+		}
+	}
+
+	if (Input::Get().IsMousePressed(KC_MOUSE_BUTTON_RIGHT))
+	{
+		glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
+
+		for (Ball& ball : m_Balls)
+		{
+			if (distance(pos, ball.Position()) < ball.Radius())
+			{
+				m_SelectedBall = &ball;
+				break;
+			}
+		}
+	}
+
+	if (Input::Get().IsMouseReleased(KC_MOUSE_BUTTON_RIGHT))
+	{
+		if (m_SelectedBall)
+		{
+			glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
+			m_SelectedBall->SetVelocity(m_SelectedBall->Position() - pos);
+
+			m_SelectedBall = nullptr;
+		}
 	}
 
 	for (int i = 0; i < m_Balls.size(); i++)
@@ -117,11 +152,17 @@ void Balls::Draw(float deltaTime)
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	for (Ball &ball : m_Balls)
+	for (Ball& ball : m_Balls)
+	{
 		Renderer2D::DrawQuad(ball.Position(), { ball.Radius() * 2, ball.Radius() * 2 });
+		Renderer2D::DrawLine(ball.Position(), ball.Position() + glm::normalize(ball.Velocity()) * ball.Radius(), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+	}
 
 	for (auto& pair : m_CollidingBalls)
 		Renderer2D::DrawLine(pair.first->Position(), pair.second->Position(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+	if(m_SelectedBall)
+		Renderer2D::DrawLine(m_SelectedBall->Position(), camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second }), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
 	Renderer2D::EndFrame();
 }

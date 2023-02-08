@@ -28,13 +28,8 @@ private:
     std::vector<Ball> m_Balls;
     std::vector<std::pair<Ball*, Ball*>> m_CollidingBalls;
 
-    GLuint VA = 0;
-    GLuint VB = 0;
-    GLuint IB = 0;
+    Ball* m_SelectedBall = nullptr;
 
-    size_t m_MaxQuadCount = 1000;
-    size_t m_MaxVertexCount = m_MaxQuadCount * 4;
-    size_t m_MaxIndexCount = m_MaxQuadCount * 6;
 
    // glm::vec2 GetGameCell(glm::vec2 worldPosition);
 };
