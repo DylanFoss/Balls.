@@ -13,6 +13,7 @@ public:
 	const inline float PosX() { return m_Position.x; }
 	const inline float PosY() { return m_Position.y; }
 	const inline float Radius() { return m_Radius; }
+	const inline float Mass() { return m_Mass; }
 
 	inline void SetPosition(glm::vec2 position) { m_Position = position; }
 	inline void SetVelocity(glm::vec2 velocity) { m_Velocity = velocity; }
@@ -26,4 +27,5 @@ private:
 	glm::vec2 m_Velocity;
 	glm::vec2 m_Acceleration;
 	float m_Radius;
+	float m_Mass;
 };

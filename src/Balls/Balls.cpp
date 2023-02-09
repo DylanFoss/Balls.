@@ -32,10 +32,10 @@ glm::mat4 model;
 
 void Balls::Init()
 {
+	//intialise openGL
 	Renderer2D::Init();
-	m_Window->SetVsync(false);
 
-	// end of opengl
+	m_Window->SetVsync(false);
 
 	m_Balls.reserve(100);
 	for (int i = 0; i < 100; i++)
@@ -51,6 +51,9 @@ void Balls::Shutdown()
 
 void Balls::Update(float deltaTime)
 {
+	//TODO: move lambda functions into their own ubiquitous methods
+	//TODO: use glm::vectors over single points.
+
 	auto distance = [](glm::vec2 point1, glm::vec2 point2)
 	{
 		return glm::sqrt(((point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y)));
@@ -77,6 +80,7 @@ void Balls::Update(float deltaTime)
 		{
 			if (distance(pos, ball.Position()) < ball.Radius())
 			{
+				ball.SetVelocity({ 0,0 });
 				ball.SetPosition(pos);
 				break;
 			}
@@ -122,26 +126,48 @@ void Balls::Update(float deltaTime)
 			if (j != i)
 			{
 				if (circleOverlap(m_Balls[i], m_Balls[j]))
+				{
 					m_CollidingBalls.push_back(std::pair<Ball*, Ball*>(&m_Balls[i], &m_Balls[j]));
+
+					//static resolution
+
+					float fDistance = distance(m_Balls[i].Position(), m_Balls[j].Position());
+					float fOverlap = 0.5f * (fDistance - m_Balls[i].Radius() - m_Balls[j].Radius());
+
+					m_Balls[i].SetPosX(m_Balls[i].PosX() - fOverlap * (m_Balls[i].PosX() - m_Balls[j].PosX()) / fDistance);
+					m_Balls[i].SetPosY(m_Balls[i].PosY() - fOverlap * (m_Balls[i].PosY() - m_Balls[j].PosY()) / fDistance);
+
+					m_Balls[j].SetPosX(m_Balls[j].PosX() + fOverlap * (m_Balls[i].PosX() - m_Balls[j].PosX()) / fDistance);
+					m_Balls[j].SetPosY(m_Balls[j].PosY() + fOverlap * (m_Balls[i].PosY() - m_Balls[j].PosY()) / fDistance);
+				}
 			}
 		}
 	}
 
-	// resolve collisions
-
+	//dynamic resolution
 	for (auto pair : m_CollidingBalls)
 	{
 		Ball* ball = pair.first;
 		Ball* target = pair.second;
 
-		float fDistance = distance(ball->Position(), target->Position());
-		float fOverlap = 0.5f * (fDistance - ball->Radius() - target->Radius());
+		glm::vec2 normal = glm::normalize(target->Position()-ball->Position());
+		glm::vec2 tangent = { -normal.y, normal.x };
 
-		ball->SetPosX(ball->PosX() - fOverlap * (ball->PosX() - target->PosX()) / fDistance);
-		ball->SetPosY(ball->PosY() - fOverlap * (ball->PosY() - target->PosY()) / fDistance);
+		auto ballTan = glm::dot(ball->Velocity(), tangent);
+		auto targetTan = glm::dot(target->Velocity(), tangent);
 
-		target->SetPosX(target->PosX() + fOverlap * (ball->PosX() - target->PosX()) / fDistance);
-		target->SetPosY(target->PosY() + fOverlap * (ball->PosY() - target->PosY()) / fDistance);
+		auto ballNorm = glm::dot(ball->Velocity(), normal);
+		auto targetNorm = glm::dot(target->Velocity(), normal);
+
+
+		ball->SetVelocity(ballTan* tangent);
+		target->SetVelocity(targetTan*tangent);
+
+		auto m1 = (ballNorm   * (ball->Mass() - target->Mass()) + 2.0f * target->Mass() * targetNorm)  / (ball->Mass() + target->Mass());
+		auto m2 = (targetNorm * (target->Mass() - ball->Mass()) + 2.0f * ball->Mass()   * ballNorm)    / (ball->Mass() + target->Mass());
+
+		ball->SetVelocity(ballTan * tangent + normal * m1);
+		target->SetVelocity(targetTan * tangent + normal * m2);
 	}
 
 }
