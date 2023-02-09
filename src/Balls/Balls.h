@@ -29,9 +29,6 @@ private:
     std::vector<std::pair<Ball*, Ball*>> m_CollidingBalls;
 
     Ball* m_SelectedBall = nullptr;
-
-
-   // glm::vec2 GetGameCell(glm::vec2 worldPosition);
 };
 
 

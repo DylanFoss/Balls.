@@ -74,20 +74,16 @@ void Balls::Update(float deltaTime)
 
 	if (Input::Get().IsMouseHeld(KC_MOUSE_BUTTON_LEFT))
 	{
-		glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
-
-		for (Ball& ball : m_Balls)
+		if(m_SelectedBall)
 		{
-			if (distance(pos, ball.Position()) < ball.Radius())
-			{
-				ball.SetVelocity({ 0,0 });
-				ball.SetPosition(pos);
-				break;
-			}
+			glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
+
+			auto swag = pos - m_SelectedBall->Position();
+			m_SelectedBall->SetVelocity(swag * 20.0f);
 		}
 	}
 
-	if (Input::Get().IsMousePressed(KC_MOUSE_BUTTON_RIGHT))
+	if (Input::Get().IsMousePressed(KC_MOUSE_BUTTON_RIGHT) || Input::Get().IsMousePressed(KC_MOUSE_BUTTON_LEFT))
 	{
 		glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
 
@@ -108,6 +104,14 @@ void Balls::Update(float deltaTime)
 			glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
 			m_SelectedBall->SetVelocity(m_SelectedBall->Position() - pos);
 
+			m_SelectedBall = nullptr;
+		}
+	}
+
+	if (Input::Get().IsMouseReleased(KC_MOUSE_BUTTON_LEFT))
+	{
+		if (m_SelectedBall)
+		{
 			m_SelectedBall = nullptr;
 		}
 	}
