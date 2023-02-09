@@ -29,6 +29,8 @@ private:
     std::vector<std::pair<Ball*, Ball*>> m_CollidingBalls;
 
     Ball* m_SelectedBall = nullptr;
+
+    int m_ID;
 };
 
 

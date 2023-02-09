@@ -6,7 +6,7 @@ class Ball
 {
 public:
 
-	Ball(float positionX, float positionY, float radius);
+	Ball(float positionX, float positionY, float radius, int ID);
 
 	const inline glm::vec2 Position() { return m_Position; }
 	const inline glm::vec2 Velocity() { return m_Velocity; }
@@ -14,6 +14,7 @@ public:
 	const inline float PosY() { return m_Position.y; }
 	const inline float Radius() { return m_Radius; }
 	const inline float Mass() { return m_Mass; }
+	const inline float ID() { return m_ID; }
 
 	inline void SetPosition(glm::vec2 position) { m_Position = position; }
 	inline void SetVelocity(glm::vec2 velocity) { m_Velocity = velocity; }
@@ -28,4 +29,6 @@ private:
 	glm::vec2 m_Acceleration;
 	float m_Radius;
 	float m_Mass;
+
+	int m_ID;
 };

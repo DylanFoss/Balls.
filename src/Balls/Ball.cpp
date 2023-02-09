@@ -1,7 +1,7 @@
 #include "Ball.h"
 
-Ball::Ball(float positionX, float positionY, float radius)
-	:m_Position({ positionX, positionY }), m_Velocity({ 0, 0 }), m_Acceleration({ 0, 0 }), m_Radius(radius), m_Mass(radius*radius)
+Ball::Ball(float positionX, float positionY, float radius, int ID)
+	:m_Position({ positionX, positionY }), m_Velocity({ 0, 0 }), m_Acceleration({ 0, 0 }), m_Radius(radius), m_Mass(radius*radius), m_ID(ID)
 {
 	//m_Velocity.x -= rand() % 600 - 300;
 	//m_Velocity.y -= rand() % 600 - 300;

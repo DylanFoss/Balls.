@@ -40,7 +40,7 @@ void Balls::Init()
 	m_Balls.reserve(100);
 	for (int i = 0; i < 100; i++)
 	{
-		m_Balls.push_back(Ball(rand() % 800 - 399, rand() % 800 - 399, rand() % 40 + 21));
+		m_Balls.push_back(Ball(rand() % 800 - 399, rand() % 800 - 399, rand() % 40 + 21, i));
 	}
 }
 
@@ -78,8 +78,8 @@ void Balls::Update(float deltaTime)
 		{
 			glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
 
-			auto swag = pos - m_SelectedBall->Position();
-			m_SelectedBall->SetVelocity(swag * 20.0f);
+			auto mag = pos - m_SelectedBall->Position();
+			m_SelectedBall->SetVelocity(mag * 20.0f);
 		}
 	}
 
@@ -127,7 +127,7 @@ void Balls::Update(float deltaTime)
 	{
 		for (int j = 0; j < m_Balls.size(); j++)
 		{
-			if (j != i)
+			if (m_Balls[i].ID() != m_Balls[j].ID())
 			{
 				if (circleOverlap(m_Balls[i], m_Balls[j]))
 				{
