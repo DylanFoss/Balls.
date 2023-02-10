@@ -123,6 +123,7 @@ void Balls::Update(float deltaTime)
 
 	// check collisions
 	m_CollidingBalls.clear();
+	m_Pairs.clear();
 	for (int i = 0; i < m_Balls.size(); i++)
 	{
 		for (int j = 0; j < m_Balls.size(); j++)
@@ -131,47 +132,70 @@ void Balls::Update(float deltaTime)
 			{
 				if (circleOverlap(m_Balls[i], m_Balls[j]))
 				{
-					m_CollidingBalls.push_back(std::pair<Ball*, Ball*>(&m_Balls[i], &m_Balls[j]));
+					m_Pairs.push_back(std::pair<Ball&, Ball&>(m_Balls[i], m_Balls[j]));
 
 					//static resolution
-
 					float fDistance = distance(m_Balls[i].Position(), m_Balls[j].Position());
 					float fOverlap = 0.5f * (fDistance - m_Balls[i].Radius() - m_Balls[j].Radius());
 
-					m_Balls[i].SetPosX(m_Balls[i].PosX() - fOverlap * (m_Balls[i].PosX() - m_Balls[j].PosX()) / fDistance);
-					m_Balls[i].SetPosY(m_Balls[i].PosY() - fOverlap * (m_Balls[i].PosY() - m_Balls[j].PosY()) / fDistance);
+					auto ballPos = m_Balls[i].Position();
+					auto targetPos = m_Balls[j].Position();
 
-					m_Balls[j].SetPosX(m_Balls[j].PosX() + fOverlap * (m_Balls[i].PosX() - m_Balls[j].PosX()) / fDistance);
-					m_Balls[j].SetPosY(m_Balls[j].PosY() + fOverlap * (m_Balls[i].PosY() - m_Balls[j].PosY()) / fDistance);
+					m_Balls[i].SetPosX(ballPos.x - fOverlap * (ballPos.x - targetPos.x) / fDistance);
+					m_Balls[i].SetPosY(ballPos.y - fOverlap * (ballPos.y - targetPos.y) / fDistance);
+
+					m_Balls[j].SetPosX(targetPos.x + fOverlap * (ballPos.x - targetPos.x) / fDistance);
+					m_Balls[j].SetPosY(targetPos.y + fOverlap * (ballPos.y - targetPos.y) / fDistance);
+
 				}
 			}
 		}
 	}
 
-	//dynamic resolution
-	for (auto pair : m_CollidingBalls)
-	{
-		Ball* ball = pair.first;
-		Ball* target = pair.second;
+	//for (auto& pair : m_CollidingBalls)
+	//{
+	//	Ball& ball = pair.first;
+	//	Ball& target = pair.second;
 
-		glm::vec2 normal = glm::normalize(target->Position()-ball->Position());
+	//	//static resolution
+	//	if (circleOverlap(m_Balls[ball.ID()], m_Balls[target.ID()]))
+	//	{
+	//		float fDistance = distance(m_Balls[ball.ID()].Position(), m_Balls[target.ID()].Position());
+	//		float fOverlap = 0.5f * (fDistance - m_Balls[ball.ID()].Radius() - m_Balls[target.ID()].Radius());
+
+	//		m_Balls[ball.ID()].SetPosX(m_Balls[ball.ID()].PosX() - fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
+	//		m_Balls[ball.ID()].SetPosY(m_Balls[ball.ID()].PosY() - fOverlap * (m_Balls[ball.ID()].PosY() - m_Balls[target.ID()].PosY()) / fDistance);
+
+	//		m_Balls[target.ID()].SetPosX(m_Balls[target.ID()].PosX() + fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
+	//		m_Balls[target.ID()].SetPosY(m_Balls[target.ID()].PosY() + fOverlap * (m_Balls[ball.ID()].PosY() - target.PosY()) / fDistance);
+	//	}
+	//}
+
+	for (auto& pair : m_CollidingBalls)
+	{
+		Ball& ball = pair.first;
+		Ball& target = pair.second;
+
+		//dynamic resolution
+
+		glm::vec2 normal = glm::normalize(target.Position()- m_Balls[ball.ID()].Position());
 		glm::vec2 tangent = { -normal.y, normal.x };
 
-		auto ballTan = glm::dot(ball->Velocity(), tangent);
-		auto targetTan = glm::dot(target->Velocity(), tangent);
+		auto ballTan = glm::dot(m_Balls[ball.ID()].Velocity(), tangent);
+		auto targetTan = glm::dot(m_Balls[target.ID()].Velocity(), tangent);
 
-		auto ballNorm = glm::dot(ball->Velocity(), normal);
-		auto targetNorm = glm::dot(target->Velocity(), normal);
+		auto ballNorm = glm::dot(m_Balls[ball.ID()].Velocity(), normal);
+		auto targetNorm = glm::dot(m_Balls[target.ID()].Velocity(), normal);
 
 
-		ball->SetVelocity(ballTan* tangent);
-		target->SetVelocity(targetTan*tangent);
+		m_Balls[ball.ID()].SetVelocity(ballTan* tangent);
+		m_Balls[target.ID()].SetVelocity(targetTan*tangent);
 
-		auto m1 = (ballNorm   * (ball->Mass() - target->Mass()) + 2.0f * target->Mass() * targetNorm)  / (ball->Mass() + target->Mass());
-		auto m2 = (targetNorm * (target->Mass() - ball->Mass()) + 2.0f * ball->Mass()   * ballNorm)    / (ball->Mass() + target->Mass());
+		auto m1 = (ballNorm   * (m_Balls[ball.ID()].Mass() - m_Balls[target.ID()].Mass()) + 2.0f * m_Balls[target.ID()].Mass() * targetNorm)  / (ball.Mass() + m_Balls[target.ID()].Mass());
+		auto m2 = (targetNorm * (m_Balls[target.ID()].Mass() - m_Balls[ball.ID()].Mass()) + 2.0f * m_Balls[ball.ID()].Mass()   * ballNorm)    / (m_Balls[ball.ID()].Mass() + m_Balls[target.ID()].Mass());
 
-		ball->SetVelocity(ballTan * tangent + normal * m1);
-		target->SetVelocity(targetTan * tangent + normal * m2);
+		m_Balls[ball.ID()].SetVelocity(ballTan * tangent + normal * m1);
+		m_Balls[target.ID()].SetVelocity(targetTan * tangent + normal * m2);
 	}
 
 }
@@ -189,7 +213,7 @@ void Balls::Draw(float deltaTime)
 	}
 
 	for (auto& pair : m_CollidingBalls)
-		Renderer2D::DrawLine(pair.first->Position(), pair.second->Position(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		Renderer2D::DrawLine(pair.first.Position(), pair.second.Position(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	if(m_SelectedBall)
 		Renderer2D::DrawLine(m_SelectedBall->Position(), camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second }), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));

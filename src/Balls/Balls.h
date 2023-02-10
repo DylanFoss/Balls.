@@ -26,7 +26,8 @@ private:
     bool m_IsPaused = false;
 
     std::vector<Ball> m_Balls;
-    std::vector<std::pair<Ball*, Ball*>> m_CollidingBalls;
+    std::vector<std::pair<Ball&, Ball&>> m_Pairs;
+    std::vector<std::pair<Ball&, Ball&>> m_CollidingBalls;
 
     Ball* m_SelectedBall = nullptr;
 
