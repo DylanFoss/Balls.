@@ -1,6 +1,6 @@
 #pragma once
-#include "GL.h"
-#include "GLRenderer.h"
+#include "Engine/GL.h"
+#include "Engine/GLRenderer.h"
 #include "Ball.h"
 
 class Balls:

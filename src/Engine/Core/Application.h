@@ -1,12 +1,12 @@
 #pragma once
 #include <string>
 #include <memory>
-#include "Window.h"
-#include "Input.h"
+#include "Engine/Core/Window.h"
+#include "Engine/Core/Input.h"
 
-#include "Events/Event.h"
-#include "Events/WindowEvent.h"
-#include "Events/KeyEvent.h"
+#include "Engine/Events/Event.h"
+#include "Engine/Events/WindowEvent.h"
+#include "Engine/Events/KeyEvent.h"
 
 class Application
 {

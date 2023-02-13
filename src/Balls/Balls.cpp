@@ -1,11 +1,11 @@
 #include "Balls.h"
-#include "pch.h"
+#include "Engine/pch.h"
 #include <fstream>
 
-#include "Core/MouseCodes.h"
-#include "Core/KeyCodes.h"
+#include "Engine/Core/MouseCodes.h"
+#include "Engine/Core/KeyCodes.h"
 
-#include "GLErrorHandler.h"
+#include "Engine/GLErrorHandler.h"
 
 #include "glm/common.hpp"
 
