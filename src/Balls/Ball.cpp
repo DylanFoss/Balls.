@@ -3,12 +3,13 @@
 Ball::Ball(float positionX, float positionY, float radius, int ID)
 	:m_Position({ positionX, positionY }), m_Velocity({ 0, 0 }), m_Acceleration({ 0, 0 }), m_Radius(radius), m_Mass(radius*radius), m_ID(ID)
 {
-	//m_Velocity.x -= rand() % 600 - 300;
-	//m_Velocity.y -= rand() % 600 - 300;
+
 }
 
 void Ball::Update(float deltaTime)
 {
+	m_LastPosition = m_Position;
+
 	m_Acceleration = -m_Velocity * 0.8f;
 
 	if (fabs(m_Velocity.x * m_Velocity.x + m_Velocity.y * m_Velocity.y) < 0.05f)

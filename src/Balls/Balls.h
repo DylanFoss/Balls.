@@ -6,6 +6,14 @@
 class Balls:
     public Application
 {
+    struct custom_comparator {
+        bool operator()(std::pair<Ball&, Ball&> a,
+                        std::pair<Ball&, Ball&> b) const
+        {
+            return (std::minmax(a.first.ID(), a.second.ID()) > std::minmax(b.first.ID(), b.second.ID()));
+        }
+    };
+
 public:
     Balls(const std::string& name, uint32_t width, uint32_t height);
     ~Balls();
@@ -26,7 +34,8 @@ private:
     bool m_IsPaused = false;
 
     std::vector<Ball> m_Balls;
-    std::vector<std::pair<Ball&, Ball&>> m_Pairs;
+
+    std::set<std::pair<Ball&, Ball&>, custom_comparator> m_Pairs;
     std::vector<std::pair<Ball&, Ball&>> m_CollidingBalls;
 
     Ball* m_SelectedBall = nullptr;

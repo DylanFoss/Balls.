@@ -14,14 +14,18 @@ public:
 	const inline float PosY() { return m_Position.y; }
 	const inline float Radius() { return m_Radius; }
 	const inline float Mass() { return m_Mass; }
-	const inline float ID() { return m_ID; }
+	const inline int ID() { return m_ID; }
 
 	inline void SetPosition(glm::vec2 position) { m_Position = position; }
 	inline void SetVelocity(glm::vec2 velocity) { m_Velocity = velocity; }
 	inline void SetPosX(float x) { m_Position.x = x; }
 	inline void SetPosY(float y) { m_Position.y = y; }
 
+
 	void Update(float deltatime);
+
+	float m_SimTimeRemaining;
+	glm::vec2 m_LastPosition;
 
 private:
 	glm::vec2 m_Position;
@@ -29,6 +33,7 @@ private:
 	glm::vec2 m_Acceleration;
 	float m_Radius;
 	float m_Mass;
+
 
 	int m_ID;
 };
