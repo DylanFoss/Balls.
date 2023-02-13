@@ -128,14 +128,14 @@ void Balls::Update(float deltaTime)
 		Ball& target = pair.second;
 
 		//static resolution
-		float fDistance = glm::distance(m_Balls[ball.ID()].Position(), m_Balls[target.ID()].Position());
-		float fOverlap = 0.5f * (fDistance - m_Balls[ball.ID()].Radius() - m_Balls[target.ID()].Radius());
+		float distance = glm::distance(ball.Position(), target.Position());
+		float overlap = 0.5f * (distance - ball.Radius() - target.Radius());
 
-		m_Balls[ball.ID()].SetPosX(m_Balls[ball.ID()].PosX() - fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
-		m_Balls[ball.ID()].SetPosY(m_Balls[ball.ID()].PosY() - fOverlap * (m_Balls[ball.ID()].PosY() - m_Balls[target.ID()].PosY()) / fDistance);
+		ball.SetPosX(ball.PosX() - overlap * (ball.PosX() - target.PosX()) / distance);
+		ball.SetPosY(ball.PosY() - overlap * (ball.PosY() - target.PosY()) / distance);
 
-		m_Balls[target.ID()].SetPosX(m_Balls[target.ID()].PosX() + fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
-		m_Balls[target.ID()].SetPosY(m_Balls[target.ID()].PosY() + fOverlap * (m_Balls[ball.ID()].PosY() - target.PosY()) / fDistance);
+		target.SetPosX(target.PosX() + overlap * (ball.PosX() - target.PosX()) / distance);
+		target.SetPosY(target.PosY() + overlap * (ball.PosY() - target.PosY()) / distance);
 
 	}
 
@@ -146,24 +146,24 @@ void Balls::Update(float deltaTime)
 
 		//dynamic resolution
 
-		glm::vec2 normal = glm::normalize(target.Position()- m_Balls[ball.ID()].Position());
+		glm::vec2 normal = glm::normalize(target.Position()- ball.Position());
 		glm::vec2 tangent = { -normal.y, normal.x };
 
-		auto ballTan = glm::dot(m_Balls[ball.ID()].Velocity(), tangent);
-		auto targetTan = glm::dot(m_Balls[target.ID()].Velocity(), tangent);
+		auto ballTan = glm::dot(ball.Velocity(), tangent);
+		auto targetTan = glm::dot(target.Velocity(), tangent);
 
-		auto ballNorm = glm::dot(m_Balls[ball.ID()].Velocity(), normal);
-		auto targetNorm = glm::dot(m_Balls[target.ID()].Velocity(), normal);
+		auto ballNorm = glm::dot(ball.Velocity(), normal);
+		auto targetNorm = glm::dot(target.Velocity(), normal);
 
 
-		m_Balls[ball.ID()].SetVelocity(ballTan* tangent);
-		m_Balls[target.ID()].SetVelocity(targetTan*tangent);
+		ball.SetVelocity(ballTan* tangent);
+		target.SetVelocity(targetTan*tangent);
 
-		auto m1 = (ballNorm   * (m_Balls[ball.ID()].Mass() - m_Balls[target.ID()].Mass()) + 2.0f * m_Balls[target.ID()].Mass() * targetNorm)  / (ball.Mass() + m_Balls[target.ID()].Mass());
-		auto m2 = (targetNorm * (m_Balls[target.ID()].Mass() - m_Balls[ball.ID()].Mass()) + 2.0f * m_Balls[ball.ID()].Mass()   * ballNorm)    / (m_Balls[ball.ID()].Mass() + m_Balls[target.ID()].Mass());
+		auto m1 = (ballNorm   * (ball.Mass() - target.Mass()) + 2.0f * target.Mass() * targetNorm)  / (ball.Mass() + target.Mass());
+		auto m2 = (targetNorm * (target.Mass() - ball.Mass()) + 2.0f * ball.Mass()   * ballNorm)    / (ball.Mass() + target.Mass());
 
-		m_Balls[ball.ID()].SetVelocity(ballTan * tangent + normal * m1);
-		m_Balls[target.ID()].SetVelocity(targetTan * tangent + normal * m2);
+		ball.SetVelocity(ballTan * tangent + normal * m1);
+		target.SetVelocity(targetTan * tangent + normal * m2);
 	}
 
 }
