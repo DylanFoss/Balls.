@@ -171,7 +171,7 @@ void Balls::Update(float deltaTime)
 	//	}
 	//}
 
-	for (auto& pair : m_CollidingBalls)
+	for (auto& pair : m_Pairs)
 	{
 		Ball& ball = pair.first;
 		Ball& target = pair.second;
