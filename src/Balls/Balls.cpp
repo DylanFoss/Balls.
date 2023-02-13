@@ -7,8 +7,6 @@
 
 #include "Engine/GLErrorHandler.h"
 
-#include "glm/common.hpp"
-
 Balls::Balls(const std::string& name, uint32_t width, uint32_t height)
 	:Application(name, width, height), m_WindowHalfHeight(m_Window->GetHeight() * 0.5f), m_WindowHalfWidth(m_Window->GetWidth() * 0.5f)
 {
@@ -54,11 +52,6 @@ void Balls::Update(float deltaTime)
 	//TODO: move lambda functions into their own ubiquitous methods
 	//TODO: use glm::vectors over single points.
 
-	auto distance = [](glm::vec2 point1, glm::vec2 point2)
-	{
-		return glm::sqrt(((point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y)));
-	};
-
 	auto distanceSqr = [](glm::vec2 point1, glm::vec2 point2)
 	{
 		return (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y);
@@ -89,7 +82,7 @@ void Balls::Update(float deltaTime)
 
 		for (Ball& ball : m_Balls)
 		{
-			if (distance(pos, ball.Position()) < ball.Radius())
+			if (glm::distance(pos, ball.Position()) < ball.Radius())
 			{
 				m_SelectedBall = &ball;
 				break;
@@ -145,7 +138,7 @@ void Balls::Update(float deltaTime)
 		//static resolution
 		if (circleOverlap(m_Balls[ball.ID()], m_Balls[target.ID()]))
 		{
-			float fDistance = distance(m_Balls[ball.ID()].Position(), m_Balls[target.ID()].Position());
+			float fDistance = glm::distance(m_Balls[ball.ID()].Position(), m_Balls[target.ID()].Position());
 			float fOverlap = 0.5f * (fDistance - m_Balls[ball.ID()].Radius() - m_Balls[target.ID()].Radius());
 
 			m_Balls[ball.ID()].SetPosX(m_Balls[ball.ID()].PosX() - fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
