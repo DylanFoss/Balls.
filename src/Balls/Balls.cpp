@@ -122,7 +122,6 @@ void Balls::Update(float deltaTime)
 	}
 
 	// check collisions
-	m_CollidingBalls.clear();
 	m_Pairs.clear();
 	for (int i = 0; i < m_Balls.size(); i++)
 	{
@@ -132,44 +131,30 @@ void Balls::Update(float deltaTime)
 			{
 				if (circleOverlap(m_Balls[i], m_Balls[j]))
 				{
-					m_Pairs.push_back(std::pair<Ball&, Ball&>(m_Balls[i], m_Balls[j]));
-
-					//static resolution
-					float fDistance = distance(m_Balls[i].Position(), m_Balls[j].Position());
-					float fOverlap = 0.5f * (fDistance - m_Balls[i].Radius() - m_Balls[j].Radius());
-
-					auto ballPos = m_Balls[i].Position();
-					auto targetPos = m_Balls[j].Position();
-
-					m_Balls[i].SetPosX(ballPos.x - fOverlap * (ballPos.x - targetPos.x) / fDistance);
-					m_Balls[i].SetPosY(ballPos.y - fOverlap * (ballPos.y - targetPos.y) / fDistance);
-
-					m_Balls[j].SetPosX(targetPos.x + fOverlap * (ballPos.x - targetPos.x) / fDistance);
-					m_Balls[j].SetPosY(targetPos.y + fOverlap * (ballPos.y - targetPos.y) / fDistance);
-
+					m_Pairs.insert(std::pair<Ball&, Ball&>(m_Balls[i], m_Balls[j]));
 				}
 			}
 		}
 	}
 
-	//for (auto& pair : m_CollidingBalls)
-	//{
-	//	Ball& ball = pair.first;
-	//	Ball& target = pair.second;
+	for (auto& pair : m_Pairs)
+	{
+		Ball& ball = pair.first;
+		Ball& target = pair.second;
 
-	//	//static resolution
-	//	if (circleOverlap(m_Balls[ball.ID()], m_Balls[target.ID()]))
-	//	{
-	//		float fDistance = distance(m_Balls[ball.ID()].Position(), m_Balls[target.ID()].Position());
-	//		float fOverlap = 0.5f * (fDistance - m_Balls[ball.ID()].Radius() - m_Balls[target.ID()].Radius());
+		//static resolution
+		if (circleOverlap(m_Balls[ball.ID()], m_Balls[target.ID()]))
+		{
+			float fDistance = distance(m_Balls[ball.ID()].Position(), m_Balls[target.ID()].Position());
+			float fOverlap = 0.5f * (fDistance - m_Balls[ball.ID()].Radius() - m_Balls[target.ID()].Radius());
 
-	//		m_Balls[ball.ID()].SetPosX(m_Balls[ball.ID()].PosX() - fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
-	//		m_Balls[ball.ID()].SetPosY(m_Balls[ball.ID()].PosY() - fOverlap * (m_Balls[ball.ID()].PosY() - m_Balls[target.ID()].PosY()) / fDistance);
+			m_Balls[ball.ID()].SetPosX(m_Balls[ball.ID()].PosX() - fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
+			m_Balls[ball.ID()].SetPosY(m_Balls[ball.ID()].PosY() - fOverlap * (m_Balls[ball.ID()].PosY() - m_Balls[target.ID()].PosY()) / fDistance);
 
-	//		m_Balls[target.ID()].SetPosX(m_Balls[target.ID()].PosX() + fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
-	//		m_Balls[target.ID()].SetPosY(m_Balls[target.ID()].PosY() + fOverlap * (m_Balls[ball.ID()].PosY() - target.PosY()) / fDistance);
-	//	}
-	//}
+			m_Balls[target.ID()].SetPosX(m_Balls[target.ID()].PosX() + fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
+			m_Balls[target.ID()].SetPosY(m_Balls[target.ID()].PosY() + fOverlap * (m_Balls[ball.ID()].PosY() - target.PosY()) / fDistance);
+		}
+	}
 
 	for (auto& pair : m_Pairs)
 	{
@@ -212,7 +197,7 @@ void Balls::Draw(float deltaTime)
 		Renderer2D::DrawLine(ball.Position(), ball.Position() + glm::normalize(ball.Velocity()) * ball.Radius(), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 
-	for (auto& pair : m_CollidingBalls)
+	for (auto& pair : m_Pairs)
 		Renderer2D::DrawLine(pair.first.Position(), pair.second.Position(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	if(m_SelectedBall)
