@@ -35,8 +35,8 @@ void Balls::Init()
 
 	m_Window->SetVsync(false);
 
-	m_Balls.reserve(100);
-	for (int i = 0; i < 100; i++)
+	m_Balls.reserve(20);
+	for (int i = 0; i < 20; i++)
 	{
 		m_Balls.push_back(Ball(rand() % 800 - 399, rand() % 800 - 399, rand() % 40 + 21, i));
 	}
@@ -49,20 +49,6 @@ void Balls::Shutdown()
 
 void Balls::Update(float deltaTime)
 {
-	//TODO: move lambda functions into their own ubiquitous methods
-	//TODO: use glm::vectors over single points.
-
-	auto distanceSqr = [](glm::vec2 point1, glm::vec2 point2)
-	{
-		return (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y);
-	};
-
-
-	auto circleOverlap = [&](Ball& ballA, Ball& ballB)
-	{
-		return distanceSqr(ballA.Position(), ballB.Position()) <= (ballA.Radius() + ballB.Radius()) * (ballA.Radius() + ballB.Radius());
-	};
-
 	camera.Update(deltaTime);
 
 	if (Input::Get().IsMouseHeld(KC_MOUSE_BUTTON_LEFT))
@@ -114,6 +100,12 @@ void Balls::Update(float deltaTime)
 		m_Balls[i].Update(deltaTime);
 	}
 
+	auto circleOverlap = [&](Ball& ballA, Ball& ballB)
+	{
+		glm::vec2 temp = ballA.Position() - ballB.Position();
+		return glm::dot(temp, temp) <= (ballA.Radius() + ballB.Radius()) * (ballA.Radius() + ballB.Radius());
+	};
+
 	// check collisions
 	m_Pairs.clear();
 	for (int i = 0; i < m_Balls.size(); i++)
@@ -136,17 +128,15 @@ void Balls::Update(float deltaTime)
 		Ball& target = pair.second;
 
 		//static resolution
-		if (circleOverlap(m_Balls[ball.ID()], m_Balls[target.ID()]))
-		{
-			float fDistance = glm::distance(m_Balls[ball.ID()].Position(), m_Balls[target.ID()].Position());
-			float fOverlap = 0.5f * (fDistance - m_Balls[ball.ID()].Radius() - m_Balls[target.ID()].Radius());
+		float fDistance = glm::distance(m_Balls[ball.ID()].Position(), m_Balls[target.ID()].Position());
+		float fOverlap = 0.5f * (fDistance - m_Balls[ball.ID()].Radius() - m_Balls[target.ID()].Radius());
 
-			m_Balls[ball.ID()].SetPosX(m_Balls[ball.ID()].PosX() - fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
-			m_Balls[ball.ID()].SetPosY(m_Balls[ball.ID()].PosY() - fOverlap * (m_Balls[ball.ID()].PosY() - m_Balls[target.ID()].PosY()) / fDistance);
+		m_Balls[ball.ID()].SetPosX(m_Balls[ball.ID()].PosX() - fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
+		m_Balls[ball.ID()].SetPosY(m_Balls[ball.ID()].PosY() - fOverlap * (m_Balls[ball.ID()].PosY() - m_Balls[target.ID()].PosY()) / fDistance);
 
-			m_Balls[target.ID()].SetPosX(m_Balls[target.ID()].PosX() + fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
-			m_Balls[target.ID()].SetPosY(m_Balls[target.ID()].PosY() + fOverlap * (m_Balls[ball.ID()].PosY() - target.PosY()) / fDistance);
-		}
+		m_Balls[target.ID()].SetPosX(m_Balls[target.ID()].PosX() + fOverlap * (m_Balls[ball.ID()].PosX() - m_Balls[target.ID()].PosX()) / fDistance);
+		m_Balls[target.ID()].SetPosY(m_Balls[target.ID()].PosY() + fOverlap * (m_Balls[ball.ID()].PosY() - target.PosY()) / fDistance);
+
 	}
 
 	for (auto& pair : m_Pairs)
