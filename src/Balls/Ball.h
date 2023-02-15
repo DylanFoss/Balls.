@@ -18,8 +18,11 @@ public:
 
 	inline void SetPosition(glm::vec2 position) { m_Position = position; }
 	inline void SetVelocity(glm::vec2 velocity) { m_Velocity = velocity; }
+	inline void SetAcceleration(glm::vec2 acc) { m_Acceleration = acc; }
 	inline void SetPosX(float x) { m_Position.x = x; }
 	inline void SetPosY(float y) { m_Position.y = y; }
+
+	inline void AddForce(glm::vec2 force) { m_Force += force * m_Mass; }
 
 	void Update(float deltatime);
 
@@ -27,8 +30,10 @@ private:
 	glm::vec2 m_Position;
 	glm::vec2 m_Velocity;
 	glm::vec2 m_Acceleration;
+	glm::vec2 m_Force;
 	float m_Radius;
 	float m_Mass;
+	float m_InvMass;
 
 	int m_ID;
 };
