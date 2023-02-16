@@ -22,7 +22,10 @@ public:
 	inline void SetPosX(float x) { m_Position.x = x; }
 	inline void SetPosY(float y) { m_Position.y = y; }
 
-	inline void AddForce(glm::vec2 force) { m_Force += force * m_Mass; }
+	//inline void AddImpulse(glm::vec2 force, float dt) { m_Acceleration += force * dt * m_InvMass; }
+	//inline void AddForce(glm::vec2 force, float dt) { m_Acceleration += force * dt*dt * m_InvMass; }
+	//inline void AddAcceleration(glm::vec2 force, float dt) { m_Acceleration += force * dt * dt; }
+	//inline void AddVelocity(glm::vec2 force, float dt) { m_Acceleration += force * dt; }
 
 	void Update(float deltatime);
 
