@@ -180,6 +180,9 @@
     <ClInclude Include="src\Engine\GLErrorHandler.h" />
     <ClInclude Include="src\Engine\GLRenderer.h" />
     <ClInclude Include="src\Engine\pch.h" />
+    <ClInclude Include="src\Engine\Physics\TimeIntegrators\IntegratorObject.h" />
+    <ClInclude Include="src\Engine\Physics\TimeIntegrators\SIEulerObject.h" />
+    <ClInclude Include="src\Engine\Physics\TimeIntegrators\VerletObject.h" />
     <ClInclude Include="src\Engine\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Engine\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Engine\Renderer\Renderer2D.h" />

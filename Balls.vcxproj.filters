@@ -34,6 +34,12 @@
     <Filter Include="Source Files\Engine\Renderer">
       <UniqueIdentifier>{798c70fd-bf99-452b-bba0-84f7b6bba0dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\Physics">
+      <UniqueIdentifier>{56c4a59d-31e8-4481-8c7d-51911ff0fb0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Physics\TimeIntegrators">
+      <UniqueIdentifier>{80d7d0d4-2695-4856-8998-f26e4cb00fb2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="basic.frag.shader">
@@ -144,6 +150,15 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Renderer\Shader.h">
       <Filter>Source Files\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\TimeIntegrators\IntegratorObject.h">
+      <Filter>Source Files\Engine\Physics\TimeIntegrators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\TimeIntegrators\SIEulerObject.h">
+      <Filter>Source Files\Engine\Physics\TimeIntegrators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\TimeIntegrators\VerletObject.h">
+      <Filter>Source Files\Engine\Physics\TimeIntegrators</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
