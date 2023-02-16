@@ -11,10 +11,8 @@ Balls::Balls(const std::string& name, uint32_t width, uint32_t height)
 	:Application(name, width, height), m_WindowHalfHeight(m_Window->GetHeight() * 0.5f), m_WindowHalfWidth(m_Window->GetWidth() * 0.5f)
 {
 	float windowAspect = static_cast<float>(m_Window->GetWidth()) / static_cast<float>(m_Window->GetHeight());
-	//float multiplier = m_GameAspect / windowAspect;
 
 	camera = OrthographicCameraController(m_WindowHalfWidth, m_WindowHalfHeight);
-    //camera.SetMaxZoom(10.0f / static_cast<float>(gameHeight));
 
 	Init();
 	glLineWidth(1.0);
@@ -24,9 +22,6 @@ Balls::~Balls()
 {
 	Shutdown();
 }
-
-Shader shader;
-glm::mat4 model;
 
 void Balls::Init()
 {
@@ -81,7 +76,10 @@ void Balls::Update(float deltaTime)
 		if (m_SelectedBall)
 		{
 			glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
+
+			//overide velocity, set it to the direction and length of the 'cue'
 			m_SelectedBall->SetVelocity(m_SelectedBall->Position() - pos);
+			//m_SelectedBall->AddVelocity((m_SelectedBall->Position() - pos)*200.f, deltaTime);
 
 			m_SelectedBall = nullptr;
 		}
@@ -156,8 +154,8 @@ void Balls::Update(float deltaTime)
 		auto targetNorm = glm::dot(target.Velocity(), normal);
 
 
-		ball.SetVelocity(ballTan* tangent);
-		target.SetVelocity(targetTan*tangent);
+		//ball.SetVelocity(ballTan* tangent);
+		//target.SetVelocity(targetTan*tangent);
 
 		auto m1 = (ballNorm   * (ball.Mass() - target.Mass()) + 2.0f * target.Mass() * targetNorm)  / (ball.Mass() + target.Mass());
 		auto m2 = (targetNorm * (target.Mass() - ball.Mass()) + 2.0f * ball.Mass()   * ballNorm)    / (ball.Mass() + target.Mass());
