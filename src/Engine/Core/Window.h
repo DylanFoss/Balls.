@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 
 #include <functional>
-#include "Events/Event.h"
+#include "Engine/Events/Event.h"
 
 
 struct WindowProps

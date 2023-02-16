@@ -1,8 +1,8 @@
-#include "OrthographicCameraController.h"
+#include "Engine/Renderer/OrthographicCameraController.h"
 
-#include "Core/Input.h"
-#include "Core/KeyCodes.h"
-#include "Core/MouseCodes.h"
+#include "Engine/Core/Input.h"
+#include "Engine/Core/KeyCodes.h"
+#include "Engine/Core/MouseCodes.h"
 
 OrthographicCameraController::OrthographicCameraController(float orthoX, float orthoY)
 	:m_OrthoX(orthoX), m_OrthoY(orthoY), m_Camera(-orthoX * m_Zoom, orthoX* m_Zoom, -orthoY * m_Zoom, orthoY* m_Zoom)

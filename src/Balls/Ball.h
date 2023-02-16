@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "Engine/pch.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -18,8 +18,14 @@ public:
 
 	inline void SetPosition(glm::vec2 position) { m_Position = position; }
 	inline void SetVelocity(glm::vec2 velocity) { m_Velocity = velocity; }
+	inline void SetAcceleration(glm::vec2 acc) { m_Acceleration = acc; }
 	inline void SetPosX(float x) { m_Position.x = x; }
 	inline void SetPosY(float y) { m_Position.y = y; }
+
+	//inline void AddImpulse(glm::vec2 force, float dt) { m_Acceleration += force * dt * m_InvMass; }
+	//inline void AddForce(glm::vec2 force, float dt) { m_Acceleration += force * dt*dt * m_InvMass; }
+	//inline void AddAcceleration(glm::vec2 force, float dt) { m_Acceleration += force * dt * dt; }
+	//inline void AddVelocity(glm::vec2 force, float dt) { m_Acceleration += force * dt; }
 
 	void Update(float deltatime);
 
@@ -27,8 +33,10 @@ private:
 	glm::vec2 m_Position;
 	glm::vec2 m_Velocity;
 	glm::vec2 m_Acceleration;
+	glm::vec2 m_Force;
 	float m_Radius;
 	float m_Mass;
+	float m_InvMass;
 
 	int m_ID;
 };

@@ -1,8 +1,8 @@
-#include "GLRenderer.h"
-#include "pch.h"
-#include "GL.h"
+#include "Engine/GLRenderer.h"
+#include "Engine/pch.h"
+#include "Engine/GL.h"
 
-#include "GLErrorHandler.h"
+#include "Engine/GLErrorHandler.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 

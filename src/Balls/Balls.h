@@ -1,11 +1,17 @@
 #pragma once
-#include "GL.h"
-#include "GLRenderer.h"
+#include "Engine/GL.h"
+#include "Engine/GLRenderer.h"
 #include "Ball.h"
 
 class Balls:
     public Application
 {
+    struct CollisionPairComparator {
+        bool operator()(std::pair<Ball&, Ball&> lhs, std::pair<Ball&, Ball&> rhs) const {
+            return (std::minmax(lhs.first.ID(), lhs.second.ID()) > std::minmax(rhs.first.ID(), rhs.second.ID()));
+        }
+    };
+
 public:
     Balls(const std::string& name, uint32_t width, uint32_t height);
     ~Balls();
@@ -26,8 +32,7 @@ private:
     bool m_IsPaused = false;
 
     std::vector<Ball> m_Balls;
-    std::vector<std::pair<Ball&, Ball&>> m_Pairs;
-    std::vector<std::pair<Ball&, Ball&>> m_CollidingBalls;
+    std::set<std::pair<Ball&, Ball&>, CollisionPairComparator> m_Pairs;
 
     Ball* m_SelectedBall = nullptr;
 
