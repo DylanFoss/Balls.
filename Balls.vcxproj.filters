@@ -37,7 +37,10 @@
     <Filter Include="Source Files\Engine\Physics">
       <UniqueIdentifier>{56c4a59d-31e8-4481-8c7d-51911ff0fb0c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Engine\Physics\TimeIntegrators">
+    <Filter Include="Source Files\Engine\Physics\Shapes">
+      <UniqueIdentifier>{8789a798-1573-464e-982f-550da3465414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Physics\Integrators">
       <UniqueIdentifier>{80d7d0d4-2695-4856-8998-f26e4cb00fb2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -88,6 +91,18 @@
     </ClCompile>
     <ClCompile Include="src\Engine\Renderer\Shader.cpp">
       <Filter>Source Files\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\Body.cpp">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\Shapes\Circle.cpp">
+      <Filter>Source Files\Engine\Physics\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\PhysicsObject.cpp">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\World.cpp">
+      <Filter>Source Files\Engine\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,14 +166,38 @@
     <ClInclude Include="src\Engine\Renderer\Shader.h">
       <Filter>Source Files\Engine\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Physics\TimeIntegrators\IntegratorObject.h">
-      <Filter>Source Files\Engine\Physics\TimeIntegrators</Filter>
+    <ClInclude Include="src\Engine\Physics\Body.h">
+      <Filter>Source Files\Engine\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Physics\TimeIntegrators\SIEulerObject.h">
-      <Filter>Source Files\Engine\Physics\TimeIntegrators</Filter>
+    <ClInclude Include="src\Engine\Physics\Shapes\Circle.h">
+      <Filter>Source Files\Engine\Physics\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Physics\TimeIntegrators\VerletObject.h">
-      <Filter>Source Files\Engine\Physics\TimeIntegrators</Filter>
+    <ClInclude Include="src\Engine\Physics\Shapes\Shape.h">
+      <Filter>Source Files\Engine\Physics\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Integrators\IntegratorObject.h">
+      <Filter>Source Files\Engine\Physics\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Integrators\SIEulerObject.h">
+      <Filter>Source Files\Engine\Physics\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Integrators\VerletObject.h">
+      <Filter>Source Files\Engine\Physics\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Transform.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\PhysicsObject.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\World.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Shapes\ShapeType.h">
+      <Filter>Source Files\Engine\Physics\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Shapes\ShapePCH.h">
+      <Filter>Source Files\Engine\Physics\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
