@@ -24,6 +24,10 @@ public:
 	void SetPosition(const glm::vec2& pos);
 	void Accelerate(const glm::vec2& acc);
 
+	float GetMass();
+
+	Shape* GetShape() { return m_Shape; };
+
 private:
 	Body* m_Body;
 	Shape* m_Shape;

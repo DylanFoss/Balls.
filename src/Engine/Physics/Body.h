@@ -22,13 +22,14 @@ public:
 	glm::vec2 GetVelocity() const;
 
 	void Accelerate(const glm::vec2& acc);
-
 	void OffsetPosition(const glm::vec2& pos);
 	void SetPosition(const glm::vec2& pos);
 
 	void Update(float deltaTime);
 
 	void UpdateMass(float mass);
+
+	float GetMass() { return m_Mass; }
 
 private:
 	Transform* m_Transform;

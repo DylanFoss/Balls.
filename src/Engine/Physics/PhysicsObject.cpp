@@ -45,3 +45,8 @@ void PhysicsObject::Accelerate(const glm::vec2& acc)
 {
 	m_Body->Accelerate(acc);
 }
+
+float PhysicsObject::GetMass()
+{
+	return m_Body->GetMass();
+}

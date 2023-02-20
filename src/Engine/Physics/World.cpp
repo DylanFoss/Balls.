@@ -8,7 +8,7 @@
 #include "Engine/Physics/Shapes/ShapeType.h"
 
 World::World(const glm::vec2& gravity)
-	:m_Gravity(gravity), m_StepDuration(0.00694f)
+	:m_Gravity(gravity), m_StepDuration(0.00694f), m_StepTime(0), m_SubSteps(8)
 {
 }
 
@@ -25,10 +25,13 @@ void World::Update(float deltaTime)
 
 	if (m_StepTime > m_StepDuration)
 	{
-		ApplyGravity();
-		ApplyConstraints();
-		SolveCollisions();
-		UpdatePositions(m_StepDuration);
+		for (int i = 0; i < m_SubSteps; i++)
+		{
+			ApplyGravity();
+			ApplyConstraints();
+			SolveCollisions();
+			UpdatePositions(m_StepDuration / m_SubSteps);
+		}
 		m_StepTime = 0;
 	}
 }
@@ -49,11 +52,13 @@ void World::ApplyConstraints()
 {
 	for (PhysicsObject* obj : m_Physics)
 	{
+		Circle* circle = static_cast<Circle*>(obj->GetShape());
+
 		const glm::vec2 toObj = obj->GetPosition() - glm::vec2{ 0.f, 0.f };
 		const float dist = glm::length(toObj);
-		if (dist > 300.f - 40.f)
+		if (dist > 300.f - circle->GetRadius())
 		{
-			obj->SetPosition((toObj/dist) * (300.f - 40.f));
+			obj->SetPosition((toObj/dist) * (300.f - circle->GetRadius()));
 		}
 	}
 }
@@ -61,23 +66,33 @@ void World::ApplyConstraints()
 //to be seperated into their own classes, but fun to mess around with now!
 void World::SolveCollisions()
 {
+	Circle* circleOne;
+	Circle* circleTwo;
+
 	for (int i = 0; i < m_Physics.size(); i++)
 	{
 		PhysicsObject* lhs = m_Physics[i];
+		circleOne = static_cast<Circle*>(lhs->GetShape());
 		for (int j = i + 1; j < m_Physics.size(); j++)
 		{
 			PhysicsObject* rhs = m_Physics[j];
+			circleTwo = static_cast<Circle*>(rhs->GetShape());
+
 			glm::vec2 collisionAxis = lhs->GetPosition() - rhs->GetPosition();
 			float distance = glm::length(collisionAxis);
-			if (distance < 80.f)
+			float radii = (circleOne->GetRadius() + circleTwo->GetRadius());
+			if (distance < radii)
 			{
 				glm::vec2 collisionNormal = collisionAxis / distance;
-				float overlap = 80.0f - distance;
+				float overlap = radii - distance;
 
-				glm::vec2 offset = 0.5f * overlap * collisionNormal;
+				float combinedMass = lhs->GetMass() + rhs->GetMass();
 
-				lhs->OffsetPosition(offset);
-				rhs->OffsetPosition(-offset);
+				//glm::vec2 offset = 0.5f * overlap * collisionNormal;
+				glm::vec2 offset = overlap * collisionNormal;
+
+				lhs->OffsetPosition((rhs->GetMass()/combinedMass) * offset);
+				rhs->OffsetPosition((lhs->GetMass() / combinedMass) * -offset);
 			}
 		}
 	}

@@ -50,10 +50,23 @@ void Balls::Update(float deltaTime)
 	{
 		glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
 
-		if (glm::length(pos) + 40. < 300.)
+		if (glm::length(pos) < 300.)
 		{
-			m_World.CreateBall(pos, 40.);
+			m_World.CreateBall(pos, rand() % 30 + 5);
 		}
+	}
+
+	if (Input::Get().IsMouseHeld(KC_MOUSE_BUTTON_RIGHT))
+	{
+		glm::vec2 pos = camera.ScreenToWorldSpace({ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second });
+
+		float scalar = glm::length(pos) < 300. ? 300. : glm::length(pos);
+		glm::vec2 normalPos = glm::normalize(pos);
+		m_World.SetGravity( normalPos*scalar );
+
+	} else if (Input::Get().IsMouseReleased(KC_MOUSE_BUTTON_RIGHT))
+	{
+		m_World.SetGravity({ 0., -1000. });
 	}
 
 	m_World.Update(deltaTime);
@@ -69,8 +82,10 @@ void Balls::Draw(float deltaTime)
 
 	for (PhysicsObject* item : m_World.m_Physics)
 	{
-		Renderer2D::DrawQuad(item->GetPosition(), { 40 * 2, 40 * 2 });
-		Renderer2D::DrawLine(item->GetPosition(), item->GetPosition() + glm::normalize(item->GetVelocity())*40.f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+		Circle* circleOne = static_cast<Circle*>(item->GetShape());
+
+		Renderer2D::DrawQuad(item->GetPosition(), { circleOne->GetRadius() * 2, circleOne->GetRadius() * 2 });
+		Renderer2D::DrawLine(item->GetPosition(), item->GetPosition() + glm::normalize(item->GetVelocity())*circleOne->GetRadius(), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 
 	Renderer2D::EndFrame();

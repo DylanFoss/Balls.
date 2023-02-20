@@ -10,6 +10,8 @@ class Circle
 public:
 	Circle(float radius);
 
+	float GetRadius() { return m_Radius; }
+
 	virtual float CalculateMass() const override;
 private:
 	float m_Radius;
