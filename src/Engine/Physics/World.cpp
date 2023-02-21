@@ -79,10 +79,14 @@ void World::SolveCollisions()
 			circleTwo = static_cast<Circle*>(rhs->GetShape());
 
 			glm::vec2 collisionAxis = lhs->GetPosition() - rhs->GetPosition();
-			float distance = glm::length(collisionAxis);
 			float radii = (circleOne->GetRadius() + circleTwo->GetRadius());
-			if (distance < radii)
+
+			float sqrDistance = glm::dot(collisionAxis, collisionAxis);
+
+			//use cheaper sqr distance first
+			if (sqrDistance < radii*radii)
 			{
+				float distance = glm::length(collisionAxis);
 				glm::vec2 collisionNormal = collisionAxis / distance;
 				float overlap = radii - distance;
 
