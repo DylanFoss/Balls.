@@ -25,6 +25,7 @@ public:
 	void Accelerate(const glm::vec2& acc);
 
 	float GetMass();
+	float GetInverseMass();
 
 	Shape* GetShape() { return m_Shape; };
 

@@ -91,7 +91,7 @@ void World::SolveCollisions()
 				//glm::vec2 offset = 0.5f * overlap * collisionNormal;
 				glm::vec2 offset = overlap * collisionNormal;
 
-				lhs->OffsetPosition((rhs->GetMass()/combinedMass) * offset);
+				lhs->OffsetPosition((rhs->GetMass() / combinedMass) * offset);
 				rhs->OffsetPosition((lhs->GetMass() / combinedMass) * -offset);
 			}
 		}

@@ -50,3 +50,8 @@ float PhysicsObject::GetMass()
 {
 	return m_Body->GetMass();
 }
+
+float PhysicsObject::GetInverseMass()
+{
+	return m_Body->GetInverseMass();
+}
