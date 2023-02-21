@@ -5,7 +5,7 @@
 #include "Engine/Physics/Transform.h"
 
 Body::Body(const BodyDefinition& BodyDef)
-	:m_Transform(new Transform(BodyDef.m_Position)), m_Mass(BodyDef.m_Mass), m_InvMass(BodyDef.m_InvMass), m_Object(new VerletObject(m_Transform->m_Position))
+	:m_Transform(new Transform(BodyDef.m_Position)), m_MassData(MassData(BodyDef.m_Mass, BodyDef.m_InvMass)), m_Object(new VerletObject(m_Transform->m_Position))
 {
 }
 
@@ -18,15 +18,15 @@ Body::~Body()
 
 void Body::UpdateMass(float mass)
 {
-	m_Mass = mass;
+	m_MassData.m_Mass = mass;
 
 	if (mass == 0)
 	{
-		m_InvMass = 0;
+		m_MassData.m_InvMass = 0;
 	}
 	else
 	{
-		m_InvMass = 1.0f / m_Mass;
+		m_MassData.m_InvMass = 1.0f / m_MassData.m_Mass;
 	}
 }
 

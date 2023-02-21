@@ -11,6 +11,18 @@ struct BodyDefinition
 	float m_InvMass = 0.0f;
 };
 
+struct MassData
+{
+	MassData(float mass, float invMass): m_Mass(mass), m_InvMass(invMass) {};
+
+	float m_Mass;
+	float m_InvMass;
+
+	//not used, will be needed for rotations
+	//float m_Inertia
+	//float m_InvInertia
+};
+
 class Body
 {
 public:
@@ -29,11 +41,11 @@ public:
 
 	void UpdateMass(float mass);
 
-	float GetMass() { return m_Mass; }
+	float GetMass() { return m_MassData.m_Mass; }
+	float GetInverseMass() { return m_MassData.m_InvMass; }
 
 private:
 	Transform* m_Transform;
 	IntegratorObject* m_Object;
-	float m_Mass;
-	float m_InvMass;
+	MassData m_MassData;
 };
