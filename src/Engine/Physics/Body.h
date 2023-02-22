@@ -1,8 +1,9 @@
 #pragma once
 #include "glm/glm.hpp"
 
+#include "Engine/Physics/Transform.h"
+
 struct IntegratorObject;
-struct Transform;
 
 struct BodyDefinition
 {
@@ -45,7 +46,7 @@ public:
 	float GetInverseMass() { return m_MassData.m_InvMass; }
 
 private:
-	Transform* m_Transform;
+	Transform m_Transform;
 	IntegratorObject* m_Object;
 	MassData m_MassData;
 };

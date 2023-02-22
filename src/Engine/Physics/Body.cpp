@@ -2,18 +2,15 @@
 #include "Engine/Physics/Body.h"
 
 #include "Engine/Physics/Integrators/VerletObject.h"
-#include "Engine/Physics/Transform.h"
 
 Body::Body(const BodyDefinition& BodyDef)
-	:m_Transform(new Transform(BodyDef.m_Position)), m_MassData(MassData(BodyDef.m_Mass, BodyDef.m_InvMass)), m_Object(new VerletObject(m_Transform->m_Position))
+	:m_Transform(Transform(BodyDef.m_Position)), m_MassData(MassData(BodyDef.m_Mass, BodyDef.m_InvMass)), m_Object(new VerletObject(m_Transform.m_Position))
 {
 }
 
 Body::~Body()
 {
 	delete m_Object;
-	//transform ownership should be moved.
-	delete m_Transform;
 }
 
 void Body::UpdateMass(float mass)
