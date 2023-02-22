@@ -1,10 +1,9 @@
 #include "World.h"
 
-#include "PhysicsObject.h"
+#include "Engine/Physics/PhysicsObject.h"
 
 #include "Engine/Physics/Shapes/Circle.h"
 #include "Engine/Physics/Body.h"
-
 #include "Engine/Physics/Shapes/ShapeType.h"
 
 World::World(const glm::vec2& gravity)
@@ -66,39 +65,47 @@ void World::ApplyConstraints()
 //to be seperated into their own classes, but fun to mess around with now!
 void World::SolveCollisions()
 {
-	Circle* circleOne;
-	Circle* circleTwo;
+	BroadPhase();
+	NarrowPhase();
+	m_Collisions.clear();
+}
 
+void World::BroadPhase()
+{
 	for (int i = 0; i < m_Physics.size(); i++)
 	{
 		PhysicsObject* lhs = m_Physics[i];
-		circleOne = static_cast<Circle*>(lhs->GetShape());
 		for (int j = i + 1; j < m_Physics.size(); j++)
 		{
 			PhysicsObject* rhs = m_Physics[j];
-			circleTwo = static_cast<Circle*>(rhs->GetShape());
 
-			glm::vec2 collisionAxis = lhs->GetPosition() - rhs->GetPosition();
-			float radii = (circleOne->GetRadius() + circleTwo->GetRadius());
+			Manifold m;
+			m.objectOne = lhs;
+			m.objectTwo = rhs;
 
-			float sqrDistance = glm::dot(collisionAxis, collisionAxis);
-
-			//use cheaper sqr distance first
-			if (sqrDistance < radii*radii)
-			{
-				float distance = glm::length(collisionAxis);
-				glm::vec2 collisionNormal = collisionAxis / distance;
-				float overlap = radii - distance;
-
-				float combinedMass = lhs->GetMass() + rhs->GetMass();
-
-				//glm::vec2 offset = 0.5f * overlap * collisionNormal;
-				glm::vec2 offset = overlap * collisionNormal;
-
-				lhs->OffsetPosition((rhs->GetMass() / combinedMass) * offset);
-				rhs->OffsetPosition((lhs->GetMass() / combinedMass) * -offset);
-			}
+			if (Collisions::CircleVsCircle(m))
+				m_Collisions.push_back(m);
 		}
+	}
+}
+
+void World::NarrowPhase()
+{
+	for(Manifold pair : m_Collisions)
+	{
+		//divide each body's individual mass by the combined mass
+		//to work out which should be offset more.
+		float combinedMass = pair.objectOne->GetMass() + pair.objectTwo->GetMass();
+
+		//glm::vec2 offset = 0.5f * overlap * collisionNormal;
+		glm::vec2 offset = pair.overlap * pair.collisionNormal;
+
+		pair.objectOne->OffsetPosition((pair.objectTwo->GetMass() / combinedMass) * offset);
+		pair.objectTwo->OffsetPosition((pair.objectOne->GetMass() / combinedMass) * -offset);
+
+		//let's not delete the ptrs
+		pair.objectOne = nullptr;
+		pair.objectTwo = nullptr;
 	}
 }
 

@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Engine\Physics\Integrators">
       <UniqueIdentifier>{80d7d0d4-2695-4856-8998-f26e4cb00fb2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\Physics\Collision">
+      <UniqueIdentifier>{6905764c-b7ad-4835-9146-8df8d41439a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="basic.frag.shader">
@@ -103,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="src\Engine\Physics\World.cpp">
       <Filter>Source Files\Engine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\Collision\Collision.cpp">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +204,9 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Physics\Shapes\ShapePCH.h">
       <Filter>Source Files\Engine\Physics\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision\Collision.h">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 #include "Engine/pch.h"
 
 #include "Engine/Physics/Shapes/ShapePCH.h"
+#include "Engine/Physics/Collision/Collision.h"
 
 class PhysicsObject;
 
@@ -19,6 +20,9 @@ public:
 	void ApplyGravity();
 	void ApplyConstraints();
 	void SolveCollisions();
+
+	void BroadPhase();
+	void NarrowPhase();
 	
 	void CreatePhysicsObject(const glm::vec2 pos, Shape* shape);
 	void CreateBall(const glm::vec2 pos, float radius);
@@ -26,6 +30,7 @@ public:
 	void SetGravity(const glm::vec2& gravity) { m_Gravity = gravity; }
 
 	std::vector<PhysicsObject*> m_Physics;
+	std::vector<Manifold> m_Collisions;
 
 private:
 	glm::vec2 m_Gravity;

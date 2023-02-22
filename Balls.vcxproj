@@ -159,6 +159,7 @@
     <ClCompile Include="src\Engine\Core\Window.cpp" />
     <ClCompile Include="src\Engine\GLErrorHandler.cpp" />
     <ClCompile Include="src\Engine\Physics\Body.cpp" />
+    <ClCompile Include="src\Engine\Physics\Collision\Collision.cpp" />
     <ClCompile Include="src\Engine\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\Engine\Physics\Shapes\Circle.cpp" />
     <ClCompile Include="src\Engine\Physics\World.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\Engine\GLRenderer.h" />
     <ClInclude Include="src\Engine\pch.h" />
     <ClInclude Include="src\Engine\Physics\Body.h" />
+    <ClInclude Include="src\Engine\Physics\Collision\Collision.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\IntegratorObject.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\SIEulerObject.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\VerletObject.h" />
