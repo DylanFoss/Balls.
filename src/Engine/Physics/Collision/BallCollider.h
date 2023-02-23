@@ -10,7 +10,10 @@ class BallCollider
 public:
 	BallCollider(float radius);
 
-	float GetRadius() { return m_Radius; }
+	virtual Manifold TestCollision(const Transform* transform, const Collider* collider, const Transform* colliderTransform) const override;
+	virtual Manifold TestCollision(const Transform* transform, const BallCollider* ball, const Transform* ballTransform) const override;
+
+	float GetRadius() const { return m_Radius; }
 
 	virtual float CalculateMass() const override;
 private:

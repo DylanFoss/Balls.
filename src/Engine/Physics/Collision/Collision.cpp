@@ -1,53 +1,48 @@
 #include "Collision.h"
 
-#include "Engine/Physics/PhysicsObject.h"
 #include "Engine/Physics/Collision/Collisionpch.h"
 #include "Engine/Physics/Body.h"
 
-namespace Collisions {
-bool CircleVsCircle(Manifold& manifold)
+
+Manifold Collisions::CircleVsCircle(const BallCollider* a, const Transform* ta, const BallCollider* b, const Transform* tb)
 {
-	PhysicsObject* objectOne = manifold.a;
-	PhysicsObject* objectTwo = manifold.b;
+	Manifold m;
 
-	BallCollider* circleOne;
-	BallCollider* circleTwo;
-	circleOne = static_cast<BallCollider*>(objectOne->GetCollider());
-	circleTwo = static_cast<BallCollider*>(objectTwo->GetCollider());
-
-	glm::vec2 collisionAxis = objectOne->GetPosition() - objectTwo->GetPosition();
-	float radii = (circleOne->GetRadius() + circleTwo->GetRadius());
+	glm::vec2 collisionAxis = ta->m_Position - tb->m_Position;
+	float radii = (a->GetRadius() + b->GetRadius());
 
 	//use cheaper squared distance first
 	float sqrDistance = glm::dot(collisionAxis, collisionAxis);
 	if (sqrDistance > radii * radii)
-		return false;
+		return m;
+
+	m.collision = true;
 
 	float distance = glm::length(collisionAxis);
 	glm::vec2 collisionNormal = glm::normalize(collisionAxis);
 	float overlap = radii - distance;
 
-	manifold.collisionNormal = collisionNormal;
-	manifold.overlap = overlap;
+	m.collisionNormal = collisionNormal;
+	m.overlap = overlap;
 
-	return true;
+	return m;
 }
 
-bool PointVsCircle(const glm::vec2& point, PhysicsObject* object)
-{
-	#ifdef  _DEBUG
-	assert(object->GetCollider()->GetType() == ColliderType::BALL);
-	#endif
+//bool PointVsCircle(const glm::vec2& point, PhysicsObject* object)
+//{
+//	#ifdef  _DEBUG
+//	assert(object->GetCollider()->GetType() == ColliderType::BALL);
+//	#endif
+//
+//	BallCollider* circle = static_cast<BallCollider*>(object->GetCollider());
+//
+//	glm::vec2 difference = point - object->GetPosition();
+//	float sqrDistance = glm::dot(difference, difference);
+//
+//
+//	if (sqrDistance > circle->GetRadius() * circle->GetRadius())
+//		return false;
+//
+//	return true;
+//}
 
-	BallCollider* circle = static_cast<BallCollider*>(object->GetCollider());
-
-	glm::vec2 difference = point - object->GetPosition();
-	float sqrDistance = glm::dot(difference, difference);
-
-
-	if (sqrDistance > circle->GetRadius() * circle->GetRadius())
-		return false;
-
-	return true;
-}
-}

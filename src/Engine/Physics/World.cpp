@@ -77,19 +77,22 @@ void World::BroadPhase()
 		{
 			PhysicsObject* rhs = m_Physics[j];
 
-			Manifold m;
-			m.a = lhs;
-			m.b = rhs;
+			Manifold m = lhs->GetCollider()->TestCollision(lhs->GetTransform(), rhs->GetCollider(), rhs->GetTransform());
 
-			if (Collisions::CircleVsCircle(m))
-				m_Collisions.push_back(m);
+			if (m.collision)
+			{
+				m.a = lhs;
+				m.b = rhs;
+				m_Collisions.emplace_back(m);
+			}
+			
 		}
 	}
 }
 
 void World::NarrowPhase()
 {
-	for (Manifold pair : m_Collisions)
+	for (Manifold& pair : m_Collisions)
 	{
 		//divide each body's individual mass by the combined mass
 		//to work out which should be offset more.

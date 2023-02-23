@@ -89,7 +89,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)/dependencies/include; $(ProjectDir)/src/vendor;  $(ProjectDir)/src; $(ProjectDir)/src/Balls;</AdditionalIncludeDirectories>
-      <ShowIncludes>true</ShowIncludes>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -192,7 +192,6 @@
     <ClInclude Include="src\Engine\Physics\Collision\Collision.h" />
     <ClInclude Include="src\Engine\Physics\Collision\Collisionpch.h" />
     <ClInclude Include="src\Engine\Physics\Collision\ColliderType.h" />
-    <ClInclude Include="src\Engine\Physics\Collision\Manifold.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\IntegratorObject.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\SIEulerObject.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\VerletObject.h" />
