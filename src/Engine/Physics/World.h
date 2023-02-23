@@ -38,4 +38,10 @@ private:
 	float m_StepDuration;
 	float m_StepTime;
 	float m_SubSteps;
+
+	//this is strictly for fun purposes only
+	float BallCannonDelay = 1;
+	float BallCannonCounter = 0;
+	float BallCannonShots = 200;
+	void BallCannon(float deltaTime);
 };

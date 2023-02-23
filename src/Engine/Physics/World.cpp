@@ -7,18 +7,6 @@
 World::World(const glm::vec2& gravity)
 	:m_Gravity(gravity), m_StepDuration(0.00694f), m_StepTime(0), m_SubSteps(8)
 {
-	CreateBall({20,20}, 20);
-
-	PhysicsObject po1 = *m_Physics.at(0);
-
-	PhysicsObject po2 = po1;
-
-	po1.OffsetPosition({ 200, 200 });
-
-	po2.OffsetPosition({ -200, -200 });
-
-	m_Physics.emplace_back(new PhysicsObject(po1));
-	m_Physics.emplace_back(new PhysicsObject(po2));
 }
 
 World::~World()
@@ -36,6 +24,16 @@ void World::Update(float deltaTime)
 	{
 		for (int i = 0; i < m_SubSteps; i++)
 		{
+			if (BallCannonShots > 0)
+			{
+				BallCannon(m_StepTime);
+			}
+			else
+			{
+				m_Physics.clear();
+				BallCannonShots = 200;
+			}
+
 			ApplyGravity();
 			ApplyConstraints();
 			SolveCollisions();
@@ -150,4 +148,17 @@ void World::CreateBall(const glm::vec2 pos, float radius)
 
 	BallCollider* c = new BallCollider(radius);
 	m_Physics.emplace_back(new PhysicsObject(c, bd));
+}
+
+void World::BallCannon(float deltaTime)
+{
+	BallCannonCounter += deltaTime;
+	if (BallCannonCounter > BallCannonDelay)
+	{
+		CreateBall({ 0,260 }, 10);
+		m_Physics.back()->SetVelocity({ -(rand() % 6 - 3), (rand() % 2 + 1) } );
+
+		BallCannonCounter = 0;
+		BallCannonShots--;
+	}
 }

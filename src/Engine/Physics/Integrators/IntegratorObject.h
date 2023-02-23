@@ -20,6 +20,8 @@ struct IntegratorObject
 	virtual void OffsetPosition(const glm::vec2& pos) = 0;
 	virtual void SetPosition(const glm::vec2& pos) = 0;
 
+	virtual void SetVelocity(const glm::vec2& vel) = 0;
+
 	virtual void SetTransform(Transform& transform) = 0;
 
 	virtual IntegratorObject* Clone() const = 0;
