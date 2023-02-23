@@ -182,7 +182,7 @@ void Renderer2D::Flush()
 		GLCall(glBindVertexArray(s_Data.QuadVA));
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, s_Data.QuadVB));
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.QuadIB));
-		GLCall(glDrawElements(GL_TRIANGLES, s_Data.MaxIndices, GL_UNSIGNED_INT, nullptr));
+		GLCall(glDrawElements(GL_TRIANGLES, s_Data.QuadIndexCount, GL_UNSIGNED_INT, nullptr));
 
 		s_Data.QuadIndexCount = 0;
 	}

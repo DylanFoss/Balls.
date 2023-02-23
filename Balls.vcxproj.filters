@@ -34,6 +34,15 @@
     <Filter Include="Source Files\Engine\Renderer">
       <UniqueIdentifier>{798c70fd-bf99-452b-bba0-84f7b6bba0dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\Physics">
+      <UniqueIdentifier>{56c4a59d-31e8-4481-8c7d-51911ff0fb0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Physics\Integrators">
+      <UniqueIdentifier>{80d7d0d4-2695-4856-8998-f26e4cb00fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Physics\Collision">
+      <UniqueIdentifier>{6905764c-b7ad-4835-9146-8df8d41439a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="basic.frag.shader">
@@ -82,6 +91,21 @@
     </ClCompile>
     <ClCompile Include="src\Engine\Renderer\Shader.cpp">
       <Filter>Source Files\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\Body.cpp">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\PhysicsObject.cpp">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\World.cpp">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\Collision\Collision.cpp">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Physics\Collision\BallCollider.cpp">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +168,48 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Renderer\Shader.h">
       <Filter>Source Files\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Body.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Integrators\IntegratorObject.h">
+      <Filter>Source Files\Engine\Physics\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Integrators\SIEulerObject.h">
+      <Filter>Source Files\Engine\Physics\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Integrators\VerletObject.h">
+      <Filter>Source Files\Engine\Physics\Integrators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Transform.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\PhysicsObject.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\World.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision\Collision.h">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision\BallCollider.h">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision\Collider.h">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision\Collisionpch.h">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision\ColliderType.h">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision\CollisionPair.h">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision\Manifold.h">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
