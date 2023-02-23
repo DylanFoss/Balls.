@@ -1,10 +1,8 @@
 #include "World.h"
 
 #include "Engine/Physics/PhysicsObject.h"
-
-#include "Engine/Physics/Collision/BallCollider.h"
 #include "Engine/Physics/Body.h"
-#include "Engine/Physics/Collision/ColliderType.h"
+#include "Engine/Physics/Collision/Collisionpch.h"
 
 World::World(const glm::vec2& gravity)
 	:m_Gravity(gravity), m_StepDuration(0.00694f), m_StepTime(0), m_SubSteps(8)
@@ -51,7 +49,7 @@ void World::ApplyConstraints()
 {
 	for (PhysicsObject* obj : m_Physics)
 	{
-		BallCollider* circle = static_cast<BallCollider*>(obj->GetShape());
+		BallCollider* circle = static_cast<BallCollider*>(obj->GetCollider());
 
 		const glm::vec2 toObj = obj->GetPosition() - glm::vec2{ 0.f, 0.f };
 		const float dist = glm::length(toObj);
@@ -80,8 +78,8 @@ void World::BroadPhase()
 			PhysicsObject* rhs = m_Physics[j];
 
 			Manifold m;
-			m.objectOne = lhs;
-			m.objectTwo = rhs;
+			m.a = lhs;
+			m.b = rhs;
 
 			if (Collisions::CircleVsCircle(m))
 				m_Collisions.push_back(m);
@@ -91,21 +89,21 @@ void World::BroadPhase()
 
 void World::NarrowPhase()
 {
-	for(Manifold pair : m_Collisions)
+	for (Manifold pair : m_Collisions)
 	{
 		//divide each body's individual mass by the combined mass
 		//to work out which should be offset more.
-		float combinedMass = pair.objectOne->GetMass() + pair.objectTwo->GetMass();
+		float combinedMass = pair.a->GetMass() + pair.b->GetMass();
 
 		//glm::vec2 offset = 0.5f * overlap * collisionNormal;
 		glm::vec2 offset = pair.overlap * pair.collisionNormal;
 
-		pair.objectOne->OffsetPosition((pair.objectTwo->GetMass() / combinedMass) * offset);
-		pair.objectTwo->OffsetPosition((pair.objectOne->GetMass() / combinedMass) * -offset);
+		pair.a->OffsetPosition((pair.b->GetMass() / combinedMass) * offset);
+		pair.b->OffsetPosition((pair.a->GetMass() / combinedMass) * -offset);
 
 		//let's not delete the ptrs
-		pair.objectOne = nullptr;
-		pair.objectTwo = nullptr;
+		pair.a = nullptr;
+		pair.b = nullptr;
 	}
 }
 

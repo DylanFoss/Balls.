@@ -7,9 +7,9 @@
 
 #include "Engine/GLErrorHandler.h"
 
-#include "Engine/Physics/PhysicsObject.h"
-
 #include "Engine/Physics/Collision/Collisionpch.h"
+
+#include "Engine/Physics/PhysicsObject.h"
 
 Balls::Balls(const std::string& name, uint32_t width, uint32_t height)
 	:Application(name, width, height), m_WindowHalfHeight(m_Window->GetHeight() * 0.5f), m_WindowHalfWidth(m_Window->GetWidth() * 0.5f), m_World(World({0., -1000.}))
@@ -80,7 +80,7 @@ void Balls::Draw(float deltaTime)
 
 	for (PhysicsObject* item : m_World.m_Physics)
 	{
-		BallCollider* circleOne = static_cast<BallCollider*>(item->GetShape());
+		BallCollider* circleOne = static_cast<BallCollider*>(item->GetCollider());
 
 		Renderer2D::DrawQuad(item->GetPosition(), { circleOne->GetRadius() * 2, circleOne->GetRadius() * 2 });
 		Renderer2D::DrawLine(item->GetPosition(), item->GetPosition() + glm::normalize(item->GetVelocity())*circleOne->GetRadius(), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));

@@ -2,6 +2,8 @@ class Body;
 struct BodyDefinition;
 class Collider;
 
+struct Transform;
+
 #include "glm/glm.hpp"
 
 /*
@@ -17,6 +19,9 @@ public:
 
 	void Update(float deltaTime);
 
+	const Transform* GetTransform() const;
+	Collider* GetCollider() { return m_Collider; };
+
 	glm::vec2 GetPosition() const;
 	glm::vec2 GetVelocity() const;
 
@@ -27,9 +32,8 @@ public:
 	float GetMass();
 	float GetInverseMass();
 
-	Collider* GetShape() { return m_Shape; };
 
 private:
 	Body* m_Body;
-	Collider* m_Shape;
+	Collider* m_Collider;
 };

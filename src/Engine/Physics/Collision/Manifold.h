@@ -8,12 +8,9 @@ struct Manifold
 	PhysicsObject* b;
 	glm::vec2 collisionNormal;
 	float overlap;
+	bool collision;
+
+	Manifold()
+		:a(nullptr), b(nullptr), collisionNormal({}), overlap{}, collision(false)
+	{};
 };
-
-namespace Collisions {
-
-bool CircleVsCircle(Manifold& manifold);
-
-bool PointVsCircle(const glm::vec2& point, PhysicsObject* object);
-
-}

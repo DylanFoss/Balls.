@@ -32,6 +32,11 @@ void Body::Update(float deltaTime)
 	m_Object->UpdatePosition(deltaTime);
 }
 
+const Transform* Body::GetTransform() const
+{
+	return &m_Transform;
+}
+
 void Body::Accelerate(const glm::vec2& acc)
 {
 	m_Object->Accelerate(acc);

@@ -205,5 +205,8 @@
     <ClInclude Include="src\Engine\Physics\Collision\ColliderType.h">
       <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision\Manifold.h">
+      <Filter>Source Files\Engine\Physics\Collision</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

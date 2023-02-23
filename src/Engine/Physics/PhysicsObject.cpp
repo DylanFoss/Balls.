@@ -3,22 +3,29 @@
 #include "Engine/Physics/Body.h"
 #include "Engine/Physics/Collision/Collider.h"
 
-PhysicsObject::PhysicsObject(Collider* shape, const BodyDefinition& body)
+//#include "Engine/Physics/Transform.h"
+
+PhysicsObject::PhysicsObject(Collider* collider, const BodyDefinition& body)
 {
 	m_Body = new Body(body);
-	m_Shape = shape;
-	m_Body->UpdateMass(m_Shape->CalculateMass());
+	m_Collider = collider;
+	m_Body->UpdateMass(m_Collider->CalculateMass());
 }
 
 PhysicsObject::~PhysicsObject()
 {
 	delete m_Body;
-	delete m_Shape;
+	delete m_Collider;
 }
 
 void PhysicsObject::Update(float deltaTime)
 {
 	m_Body->Update(deltaTime);
+}
+
+const Transform* PhysicsObject::GetTransform() const
+{
+	return m_Body->GetTransform();
 }
 
 glm::vec2 PhysicsObject::GetPosition() const

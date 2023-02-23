@@ -1,8 +1,10 @@
 #pragma once
 #include "glm/glm.hpp"
 
+#ifndef TRANSFORM_H_INCLUDED
 #include "Engine/Physics/Transform.h"
-
+#define TRANSFORM_H_INCLUDED
+#endif
 struct IntegratorObject;
 
 struct BodyDefinition
@@ -29,6 +31,8 @@ class Body
 public:
 	Body(const BodyDefinition& BodyDef);
 	~Body();
+
+	const Transform* GetTransform() const;
 
 	glm::vec2 GetPosition() const;
 	glm::vec2 GetAcceleration() const;
