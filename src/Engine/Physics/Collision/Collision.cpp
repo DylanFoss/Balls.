@@ -28,21 +28,15 @@ Manifold Collisions::CircleVsCircle(const BallCollider* a, const Transform* ta, 
 	return m;
 }
 
-//bool PointVsCircle(const glm::vec2& point, PhysicsObject* object)
-//{
-//	#ifdef  _DEBUG
-//	assert(object->GetCollider()->GetType() == ColliderType::BALL);
-//	#endif
-//
-//	BallCollider* circle = static_cast<BallCollider*>(object->GetCollider());
-//
-//	glm::vec2 difference = point - object->GetPosition();
-//	float sqrDistance = glm::dot(difference, difference);
-//
-//
-//	if (sqrDistance > circle->GetRadius() * circle->GetRadius())
-//		return false;
-//
-//	return true;
-//}
+bool Collisions::PointVsCircle(const glm::vec2& a, const BallCollider* b, const Transform* tb)
+{
+	glm::vec2 difference = a - tb->m_Position;
+	float sqrDistance = glm::dot(difference, difference);
+
+
+	if (sqrDistance > b->GetRadius() * b->GetRadius())
+		return false;
+
+	return true;
+}
 

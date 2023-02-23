@@ -1,24 +1,16 @@
 #include "glm/glm.hpp"
 
+#include "Engine/Physics/Collision/Manifold.h"
+
 class PhysicsObject;
 struct Transform;
 class BallCollider;
-
-struct Manifold
-{
-	PhysicsObject* a;
-	PhysicsObject* b;
-	glm::vec2 collisionNormal;
-	float overlap;
-
-	bool collision = false;
-};
 
 namespace Collisions 
 {
 
 Manifold CircleVsCircle(const BallCollider* a, const Transform* ta, const BallCollider* b, const Transform* tb);
 
-//bool PointVsCircle(const glm::vec2& point, PhysicsObject* object);
+bool PointVsCircle(const glm::vec2& a, const BallCollider* b, const Transform* tb);
 
 }

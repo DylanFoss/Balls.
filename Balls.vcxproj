@@ -190,8 +190,10 @@
     <ClInclude Include="src\Engine\Physics\Collision\BallCollider.h" />
     <ClInclude Include="src\Engine\Physics\Collision\Collider.h" />
     <ClInclude Include="src\Engine\Physics\Collision\Collision.h" />
+    <ClInclude Include="src\Engine\Physics\Collision\CollisionPair.h" />
     <ClInclude Include="src\Engine\Physics\Collision\Collisionpch.h" />
     <ClInclude Include="src\Engine\Physics\Collision\ColliderType.h" />
+    <ClInclude Include="src\Engine\Physics\Collision\Manifold.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\IntegratorObject.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\SIEulerObject.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\VerletObject.h" />
