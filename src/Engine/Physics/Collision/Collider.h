@@ -1,18 +1,18 @@
-#include "Engine/Physics/Shapes/ShapeType.h"
+#include "Engine/Physics/Collision/ColliderType.h"
 
 /*
 * A container for a particualr shapes bounds, to be used in rendering, mass calulation
 * and collision detection.
 */
-class Shape
+class Collider
 {
 public:
 
 	virtual float CalculateMass() const = 0;
-	ShapeType GetType() const { return m_Type; };
+	ColliderType GetType() const { return m_Type; };
 
 protected:
-	ShapeType m_Type;
+	ColliderType m_Type;
 };
 
 //Shape::Type Shape::GetType() const { return m_Type; };

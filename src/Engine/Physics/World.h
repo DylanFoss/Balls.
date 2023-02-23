@@ -2,7 +2,7 @@
 #include "glm/glm.hpp"
 #include "Engine/pch.h"
 
-#include "Engine/Physics/Shapes/ShapePCH.h"
+#include "Engine/Physics/Collision/Collisionpch.h"
 #include "Engine/Physics/Collision/Collision.h"
 
 class PhysicsObject;
@@ -24,7 +24,7 @@ public:
 	void BroadPhase();
 	void NarrowPhase();
 	
-	void CreatePhysicsObject(const glm::vec2 pos, Shape* shape);
+	void CreatePhysicsObject(const glm::vec2 pos, Collider* shape);
 	void CreateBall(const glm::vec2 pos, float radius);
 
 	void SetGravity(const glm::vec2& gravity) { m_Gravity = gravity; }

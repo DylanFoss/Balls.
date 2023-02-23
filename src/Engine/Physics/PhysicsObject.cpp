@@ -1,9 +1,9 @@
 #include "PhysicsObject.h"
 
 #include "Engine/Physics/Body.h"
-#include "Engine/Physics/Shapes/ShapePCH.h"
+#include "Engine/Physics/Collision/Collider.h"
 
-PhysicsObject::PhysicsObject(Shape* shape, const BodyDefinition& body)
+PhysicsObject::PhysicsObject(Collider* shape, const BodyDefinition& body)
 {
 	m_Body = new Body(body);
 	m_Shape = shape;

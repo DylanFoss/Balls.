@@ -1,7 +1,7 @@
 #include "Collision.h"
 
 #include "Engine/Physics/PhysicsObject.h"
-#include "Engine/Physics/Shapes/ShapePCH.h"
+#include "Engine/Physics/Collision/Collisionpch.h"
 #include "Engine/Physics/Body.h"
 
 namespace Collisions {
@@ -10,10 +10,10 @@ bool CircleVsCircle(Manifold& manifold)
 	PhysicsObject* objectOne = manifold.objectOne;
 	PhysicsObject* objectTwo = manifold.objectTwo;
 
-	Circle* circleOne;
-	Circle* circleTwo;
-	circleOne = static_cast<Circle*>(objectOne->GetShape());
-	circleTwo = static_cast<Circle*>(objectTwo->GetShape());
+	BallCollider* circleOne;
+	BallCollider* circleTwo;
+	circleOne = static_cast<BallCollider*>(objectOne->GetShape());
+	circleTwo = static_cast<BallCollider*>(objectTwo->GetShape());
 
 	glm::vec2 collisionAxis = objectOne->GetPosition() - objectTwo->GetPosition();
 	float radii = (circleOne->GetRadius() + circleTwo->GetRadius());
@@ -36,10 +36,10 @@ bool CircleVsCircle(Manifold& manifold)
 bool PointVsCircle(const glm::vec2& point, PhysicsObject* object)
 {
 	#ifdef  _DEBUG
-	assert(object->GetShape()->GetType() == ShapeType::CIRCLE);
+	assert(object->GetShape()->GetType() == ColliderType::BALL);
 	#endif
 
-	Circle* circle = static_cast<Circle*>(object->GetShape());
+	BallCollider* circle = static_cast<BallCollider*>(object->GetShape());
 
 	glm::vec2 difference = point - object->GetPosition();
 	float sqrDistance = glm::dot(difference, difference);

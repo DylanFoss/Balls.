@@ -1,6 +1,6 @@
 class Body;
 struct BodyDefinition;
-class Shape;
+class Collider;
 
 #include "glm/glm.hpp"
 
@@ -12,7 +12,7 @@ class PhysicsObject
 {
 public:
 
-	PhysicsObject(Shape* shape, const BodyDefinition& body);
+	PhysicsObject(Collider* shape, const BodyDefinition& body);
 	~PhysicsObject();
 
 	void Update(float deltaTime);
@@ -27,9 +27,9 @@ public:
 	float GetMass();
 	float GetInverseMass();
 
-	Shape* GetShape() { return m_Shape; };
+	Collider* GetShape() { return m_Shape; };
 
 private:
 	Body* m_Body;
-	Shape* m_Shape;
+	Collider* m_Shape;
 };

@@ -2,9 +2,9 @@
 
 #include "Engine/Physics/PhysicsObject.h"
 
-#include "Engine/Physics/Shapes/Circle.h"
+#include "Engine/Physics/Collision/BallCollider.h"
 #include "Engine/Physics/Body.h"
-#include "Engine/Physics/Shapes/ShapeType.h"
+#include "Engine/Physics/Collision/ColliderType.h"
 
 World::World(const glm::vec2& gravity)
 	:m_Gravity(gravity), m_StepDuration(0.00694f), m_StepTime(0), m_SubSteps(8)
@@ -51,7 +51,7 @@ void World::ApplyConstraints()
 {
 	for (PhysicsObject* obj : m_Physics)
 	{
-		Circle* circle = static_cast<Circle*>(obj->GetShape());
+		BallCollider* circle = static_cast<BallCollider*>(obj->GetShape());
 
 		const glm::vec2 toObj = obj->GetPosition() - glm::vec2{ 0.f, 0.f };
 		const float dist = glm::length(toObj);
@@ -109,15 +109,15 @@ void World::NarrowPhase()
 	}
 }
 
-void World::CreatePhysicsObject(const glm::vec2 pos, Shape* shape)
+void World::CreatePhysicsObject(const glm::vec2 pos, Collider* shape)
 {
-	Shape* concreteShape;
+	Collider* concreteShape;
 	switch (shape->GetType())
 	{
-	case(ShapeType::CIRCLE):
-		concreteShape = static_cast<Circle*>(shape);
+	case(ColliderType::BALL):
+		concreteShape = static_cast<BallCollider*>(shape);
 		break;
-	case(ShapeType::BOX):
+	case(ColliderType::AABB):
 		break;
 	default:
 		std::cout << "No valid type provided." << '\n';
@@ -135,6 +135,6 @@ void World::CreateBall(const glm::vec2 pos, float radius)
 	BodyDefinition bd;
 	bd.m_Position = pos;
 
-	Circle* c = new Circle(radius);
+	BallCollider* c = new BallCollider(radius);
 	m_Physics.emplace_back(new PhysicsObject(c, bd));
 }
