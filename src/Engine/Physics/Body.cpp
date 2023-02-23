@@ -85,6 +85,11 @@ void Body::SetPosition(const glm::vec2& pos)
 	m_Object->SetPosition(pos);
 }
 
+void Body::SetVelocity(const glm::vec2& vel)
+{
+	m_Object->SetVelocity(vel);
+}
+
 glm::vec2 Body::GetPosition() const
 {
 	return m_Object->GetPosition();

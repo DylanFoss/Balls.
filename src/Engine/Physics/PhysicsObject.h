@@ -36,6 +36,7 @@ public:
 
 	void OffsetPosition(const glm::vec2& pos);
 	void SetPosition(const glm::vec2& pos);
+	void SetVelocity(const glm::vec2& vel);
 	void Accelerate(const glm::vec2& acc);
 
 	float GetMass();

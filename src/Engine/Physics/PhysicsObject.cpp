@@ -85,6 +85,11 @@ void PhysicsObject::SetPosition(const glm::vec2& pos)
 	m_Transform.m_Position = pos;
 }
 
+void PhysicsObject::SetVelocity(const glm::vec2& vel)
+{
+	m_Body->SetVelocity(vel);
+}
+
 void PhysicsObject::Accelerate(const glm::vec2& acc)
 {
 	m_Body->Accelerate(acc);

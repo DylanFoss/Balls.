@@ -42,6 +42,7 @@ public:
 	void Accelerate(const glm::vec2& acc);
 	void OffsetPosition(const glm::vec2& pos);
 	void SetPosition(const glm::vec2& pos);
+	void SetVelocity(const glm::vec2& vel);
 
 	void SetTransform(Transform& transform);
 
