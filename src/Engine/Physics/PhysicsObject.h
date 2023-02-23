@@ -2,7 +2,10 @@ class Body;
 struct BodyDefinition;
 class Collider;
 
-struct Transform;
+#ifndef TRANSFORM_H_INCLUDED
+#include "Engine/Physics/Transform.h"
+#define TRANSFORM_H_INCLUDED
+#endif
 
 #include "glm/glm.hpp"
 
@@ -36,4 +39,5 @@ public:
 private:
 	Body* m_Body;
 	Collider* m_Collider;
+	Transform m_Transform;
 };

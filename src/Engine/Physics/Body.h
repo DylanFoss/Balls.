@@ -1,11 +1,8 @@
 #pragma once
 #include "glm/glm.hpp"
 
-#ifndef TRANSFORM_H_INCLUDED
-#include "Engine/Physics/Transform.h"
-#define TRANSFORM_H_INCLUDED
-#endif
 struct IntegratorObject;
+struct Transform;
 
 struct BodyDefinition
 {
@@ -29,10 +26,8 @@ struct MassData
 class Body
 {
 public:
-	Body(const BodyDefinition& BodyDef);
+	Body(const BodyDefinition& BodyDef, Transform& transform);
 	~Body();
-
-	const Transform* GetTransform() const;
 
 	glm::vec2 GetPosition() const;
 	glm::vec2 GetAcceleration() const;
@@ -50,7 +45,6 @@ public:
 	float GetInverseMass() { return m_MassData.m_InvMass; }
 
 private:
-	Transform m_Transform;
 	IntegratorObject* m_Object;
 	MassData m_MassData;
 };

@@ -3,6 +3,11 @@
 #include "Engine/Physics/Collision/Collisionpch.h"
 #include "Engine/Physics/Body.h"
 
+#ifndef TRANSFORM_H_INCLUDED
+#include "Engine/Physics/Transform.h"
+#define TRANSFORM_H_INCLUDED
+#endif
+
 
 Manifold Collisions::CircleVsCircle(const BallCollider* a, const Transform* ta, const BallCollider* b, const Transform* tb)
 {

@@ -3,8 +3,14 @@
 
 #include "Engine/Physics/Integrators/VerletObject.h"
 
-Body::Body(const BodyDefinition& BodyDef)
-	:m_Transform(Transform(BodyDef.m_Position)), m_MassData(MassData(BodyDef.m_Mass, BodyDef.m_InvMass)), m_Object(new VerletObject(m_Transform.m_Position))
+
+#ifndef TRANSFORM_H_INCLUDED
+#include "Engine/Physics/Transform.h"
+#define TRANSFORM_H_INCLUDED
+#endif
+
+Body::Body(const BodyDefinition& BodyDef, Transform& transform)
+	:m_MassData(MassData(BodyDef.m_Mass, BodyDef.m_InvMass)), m_Object(new VerletObject(transform.m_Position))
 {
 }
 
@@ -32,19 +38,9 @@ void Body::Update(float deltaTime)
 	m_Object->UpdatePosition(deltaTime);
 }
 
-const Transform* Body::GetTransform() const
-{
-	return &m_Transform;
-}
-
 void Body::Accelerate(const glm::vec2& acc)
 {
 	m_Object->Accelerate(acc);
-}
-
-void Body::OffsetPosition(const glm::vec2& pos)
-{
-	m_Object->OffsetPosition(pos);
 }
 
 void Body::SetPosition(const glm::vec2& pos)

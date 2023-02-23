@@ -6,9 +6,9 @@
 //#include "Engine/Physics/Transform.h"
 
 PhysicsObject::PhysicsObject(Collider* collider, const BodyDefinition& body)
+	:m_Transform(Transform(body.m_Position)), m_Collider(collider)
 {
-	m_Body = new Body(body);
-	m_Collider = collider;
+	m_Body = new Body(body, m_Transform);
 	m_Body->UpdateMass(m_Collider->CalculateMass());
 }
 
@@ -25,7 +25,7 @@ void PhysicsObject::Update(float deltaTime)
 
 const Transform* PhysicsObject::GetTransform() const
 {
-	return m_Body->GetTransform();
+	return &m_Transform;
 }
 
 glm::vec2 PhysicsObject::GetPosition() const
@@ -40,12 +40,12 @@ glm::vec2 PhysicsObject::GetVelocity() const
 
 void PhysicsObject::OffsetPosition(const glm::vec2& pos)
 {
-	m_Body->OffsetPosition(pos);
+	m_Transform.m_Position += pos;
 }
 
 void PhysicsObject::SetPosition(const glm::vec2& pos)
 {
-	m_Body->SetPosition(pos);
+	m_Transform.m_Position = pos;
 }
 
 void PhysicsObject::Accelerate(const glm::vec2& acc)
