@@ -20,6 +20,12 @@ public:
 	PhysicsObject(Collider* shape, const BodyDefinition& body);
 	~PhysicsObject();
 
+	PhysicsObject(const PhysicsObject& other);
+	PhysicsObject operator=(const PhysicsObject& other);
+	PhysicsObject(PhysicsObject&& other) noexcept;
+	PhysicsObject operator=(PhysicsObject&& other) noexcept;
+
+
 	void Update(float deltaTime);
 
 	const Transform* GetTransform() const;

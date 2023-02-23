@@ -28,3 +28,8 @@ float BallCollider::CalculateMass() const
 	//Obviously not the mass of a circle, but will do for now.
 	return m_Radius * m_Radius;
 }
+
+BallCollider* BallCollider::Clone() const
+{
+	return new BallCollider(*this);
+}

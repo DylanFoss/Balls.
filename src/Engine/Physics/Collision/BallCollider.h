@@ -16,6 +16,8 @@ public:
 	float GetRadius() const { return m_Radius; }
 
 	virtual float CalculateMass() const override;
+
+	virtual BallCollider* Clone() const override;
 private:
 	float m_Radius;
 };

@@ -7,6 +7,18 @@
 World::World(const glm::vec2& gravity)
 	:m_Gravity(gravity), m_StepDuration(0.00694f), m_StepTime(0), m_SubSteps(8)
 {
+	CreateBall({20,20}, 20);
+
+	PhysicsObject po1 = *m_Physics.at(0);
+
+	PhysicsObject po2 = po1;
+
+	po1.OffsetPosition({ 200, 200 });
+
+	po2.OffsetPosition({ -200, -200 });
+
+	m_Physics.emplace_back(new PhysicsObject(po1));
+	m_Physics.emplace_back(new PhysicsObject(po2));
 }
 
 World::~World()

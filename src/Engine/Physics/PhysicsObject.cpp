@@ -3,8 +3,6 @@
 #include "Engine/Physics/Body.h"
 #include "Engine/Physics/Collision/Collider.h"
 
-//#include "Engine/Physics/Transform.h"
-
 PhysicsObject::PhysicsObject(Collider* collider, const BodyDefinition& body)
 	:m_Transform(Transform(body.m_Position)), m_Collider(collider)
 {
@@ -16,6 +14,45 @@ PhysicsObject::~PhysicsObject()
 {
 	delete m_Body;
 	delete m_Collider;
+}
+
+PhysicsObject::PhysicsObject(const PhysicsObject& other)
+	:m_Transform(other.m_Transform)
+{
+	m_Body = new Body(*other.m_Body);
+	m_Body->SetTransform(m_Transform);
+	m_Collider = other.m_Collider->Clone();
+}
+
+PhysicsObject PhysicsObject::operator=(const PhysicsObject& other)
+{
+	m_Transform = other.m_Transform;
+	m_Body = new Body(*other.m_Body);
+	m_Collider = other.m_Collider->Clone();
+
+	return *this;
+}
+
+PhysicsObject::PhysicsObject(PhysicsObject&& other) noexcept
+	:m_Transform(std::move(other.m_Transform))
+{
+	m_Body = other.m_Body;
+	m_Collider = other.m_Collider;
+
+	other.m_Body = nullptr;
+	other.m_Collider = nullptr;
+}
+
+PhysicsObject PhysicsObject::operator=(PhysicsObject&& other) noexcept
+{
+	m_Transform = std::move(other.m_Transform);
+	m_Body = other.m_Body;
+	m_Collider = other.m_Collider;
+
+	other.m_Body = nullptr;
+	other.m_Collider = nullptr;
+
+	return *this;
 }
 
 void PhysicsObject::Update(float deltaTime)

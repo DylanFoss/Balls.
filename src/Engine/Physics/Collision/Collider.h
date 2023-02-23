@@ -12,12 +12,15 @@ class BallCollider;
 class Collider
 {
 public:
+	virtual ~Collider() {};
 
 	virtual Manifold TestCollision(const Transform* transform, const Collider* collider, const Transform* colliderTransform) const = 0;
 	virtual Manifold TestCollision(const Transform* transform, const BallCollider* ball, const Transform* ballTransform) const = 0;
 
 	virtual float CalculateMass() const = 0;
 	ColliderType GetType() const { return m_Type; };
+
+	virtual Collider* Clone() const = 0;
 
 protected:
 	ColliderType m_Type;
