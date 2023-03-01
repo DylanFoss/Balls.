@@ -9,6 +9,19 @@ class Collider;
 
 #include "glm/glm.hpp"
 
+struct BodyComponent
+{
+	glm::vec2 m_Positon;
+	glm::vec2 m_PositionOld;
+	glm::vec2 m_Acceleration;
+	glm::vec2 m_Velocity;
+};
+
+struct BallColliderComponent
+{
+	float m_Radius;
+};
+
 /*
 * A physics object that contains a body and a shape, which combine to have a presence
 * in the world.

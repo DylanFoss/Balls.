@@ -7,9 +7,6 @@
 
 #include "Engine/GLErrorHandler.h"
 
-#include "Engine/Physics/Collision/Collisionpch.h"
-
-#include "Engine/Physics/PhysicsObject.h"
 
 Balls::Balls(const std::string& name, uint32_t width, uint32_t height)
 	:Application(name, width, height), m_WindowHalfHeight(m_Window->GetHeight() * 0.5f), m_WindowHalfWidth(m_Window->GetWidth() * 0.5f), m_World(World({0., -1000.}))
@@ -78,12 +75,11 @@ void Balls::Draw(float deltaTime)
 
 	Renderer2D::DrawQuad({ 0,0 }, { 300 * 2, 300 * 2 });
 
-	for (PhysicsObject* item : m_World.m_Physics)
+	for (EntityID item : m_World.m_PhysicsObjects.m_Entities)
 	{
-		BallCollider* circleOne = static_cast<BallCollider*>(item->GetCollider());
 
-		Renderer2D::DrawQuad(item->GetPosition(), { circleOne->GetRadius() * 2, circleOne->GetRadius() * 2 });
-		Renderer2D::DrawLine(item->GetPosition(), item->GetPosition() + glm::normalize(item->GetVelocity())*circleOne->GetRadius(), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+		Renderer2D::DrawQuad(m_World.m_PhysicsObjects.m_Bodies[item].m_Position, { m_World.m_PhysicsObjects.m_BallColliders[item].m_Radius * 2, m_World.m_PhysicsObjects.m_BallColliders[item].m_Radius * 2 });
+		Renderer2D::DrawLine(m_World.m_PhysicsObjects.m_Bodies[item].m_Position, m_World.m_PhysicsObjects.m_Bodies[item].m_Position + glm::normalize(m_World.m_PhysicsObjects.m_Bodies[item].m_Velocity)* m_World.m_PhysicsObjects.m_BallColliders[item].m_Radius, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 
 	Renderer2D::EndFrame();
