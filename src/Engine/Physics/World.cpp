@@ -183,13 +183,18 @@ void World::Reserve(size_t n)
 	m_PhysicsObjects.m_Bodies.reserve(n);
 }
 
+float t = 0;
 void World::BallCannon(float deltaTime)
 {
 	BallCannonCounter += deltaTime;
 	if (BallCannonCounter > BallCannonDelay)
 	{
-		EntityID id = CreateBall({ 100,260 }, 5);
-		m_PhysicsObjects.m_Bodies[id].m_Velocity = { 0.f,-100.f };
+		EntityID id = CreateBall({ 0,260 }, 5);
+
+		t += deltaTime;
+		const float angle = 1.0f * sin(t) + 3.14159265358979323846 * 0.5f;
+		m_PhysicsObjects.m_Bodies[id].m_OldPosition = glm::vec2{ cos(angle), sin(angle) } + m_PhysicsObjects.m_Bodies[id].m_Position;
+
 
 		BallCannonCounter = 0;
 		BallCannonShots--;

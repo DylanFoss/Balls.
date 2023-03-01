@@ -173,8 +173,8 @@ private:
 	float m_SubSteps;
 
 	//this is strictly for fun purposes only
-	float BallCannonDelay = 1;
+	float BallCannonDelay = 0.2;
 	float BallCannonCounter = 0;
-	float BallCannonShots = 1000;
+	float BallCannonShots = 3000;
 	void BallCannon(float deltaTime);
 };
