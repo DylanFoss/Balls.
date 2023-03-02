@@ -44,10 +44,36 @@ struct BallCollider
 
 struct PhysicsObjects
 {
+	enum
+	{
+		kFlagVerletObject = 1 << 0,
+		kFlagBallCollider = 1 << 1,
+	};
+
 	std::vector<EntityID> m_Entities;
-	//std::vector<Transform> m_Positions;
-	std::vector<VerletBody> m_Bodies;
+	std::vector<VerletBody> m_VerletBodies;
 	std::vector<BallCollider> m_BallColliders;
+
+	std::vector<int> m_Flags;
+
+	EntityID CreatePhysicsObject()
+	{
+		//m_Positions.emplace_back(Transform());
+		m_BallColliders.emplace_back(BallCollider());
+		m_VerletBodies.emplace_back(VerletBody());
+
+		m_Entities.emplace_back(0);
+
+		return static_cast<EntityID>(m_Entities.size() - 1);
+	}
+
+	void Reserve(size_t n)
+	{
+		//m_PhysicsObjects.m_Positions.reserve(n);
+		m_Entities.reserve(n);
+		m_BallColliders.reserve(n);
+		m_VerletBodies.reserve(n);
+	}
 };
 
 //struct VerletSystem
@@ -154,10 +180,8 @@ public:
 
 	void BroadPhase();
 	void NarrowPhase();
-	
-	EntityID CreatePhysicsObject();
+
 	EntityID CreateBall(const glm::vec2 pos, float radius);
-	void Reserve(size_t n);
 
 
 	void SetGravity(const glm::vec2& gravity) { m_Gravity = gravity; }
