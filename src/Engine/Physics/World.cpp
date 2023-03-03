@@ -5,7 +5,7 @@
 World::World(const glm::vec2& gravity)
 	:m_Gravity(gravity), m_StepDuration(1.f/60.f), m_StepTime(0), m_SubSteps(8)
 {
-	m_PhysicsObjects.Reserve(3000);
+	m_PhysicsObjects.Reserve(3000); 
 }
 
 World::~World()
@@ -44,7 +44,6 @@ void World::UpdatePositions(float deltaTime)
 		verletBody.m_OldPosition = verletBody.m_Position;
 		verletBody.m_Position = verletBody.m_Position + verletBody.m_Velocity + verletBody.m_Acceleration * deltaTime * deltaTime;
 		verletBody.m_Acceleration = { 0.0f, 0.0f };
-	//	verletBody.m_Velocity = { 0.0f, 0.0f };
 	}
 }
 
@@ -88,31 +87,28 @@ void World::BroadPhase()
 	{
 		EntityID lhs = m_PhysicsObjects.m_Entities[i];
 		VerletBody& verletBodyA = m_PhysicsObjects.m_VerletBodies[lhs];
-		BallCollider& colliderA = m_PhysicsObjects.m_BallColliders[lhs];
 
 		for (int j = i + 1; j < m_PhysicsObjects.m_Entities.size(); j++)
 		{
 			EntityID rhs = m_PhysicsObjects.m_Entities[j];
 			VerletBody& verletBodyB = m_PhysicsObjects.m_VerletBodies[rhs];
-			BallCollider& colliderB= m_PhysicsObjects.m_BallColliders[rhs];
 
-			Manifold m;
-			m.collision = true;
+			BallCollider& colliderA = m_PhysicsObjects.m_BallColliders[lhs];
+			BallCollider& colliderB = m_PhysicsObjects.m_BallColliders[rhs];
 
 			glm::vec2 collisionAxis = verletBodyA.m_Position - verletBodyB.m_Position;
 			float radii = (colliderA.m_Radius + colliderB.m_Radius);
 
 			//use cheaper squared distance first
 			float sqrDistance = glm::dot(collisionAxis, collisionAxis);
-			if (sqrDistance > radii * radii)
-				m.collision = false;
 
-			if (m.collision)
+			if (sqrDistance < radii * radii)
 			{
 				float distance = glm::length(collisionAxis);
 				glm::vec2 collisionNormal = glm::normalize(collisionAxis);
 				float overlap = radii - distance;
 
+				Manifold m;
 				m.a = lhs;
 				m.b = rhs;
 				m.collisionNormal = collisionNormal;
@@ -120,7 +116,6 @@ void World::BroadPhase()
 
 				m_Collisions.emplace_back(m);
 			}
-			
 		}
 	}
 }
@@ -155,12 +150,17 @@ EntityID World::CreateBall(const glm::vec2 pos, float radius)
 {
 	EntityID id = m_PhysicsObjects.CreatePhysicsObject();
 
-	m_PhysicsObjects.m_Entities[id]					=  id;
-	m_PhysicsObjects.m_BallColliders[id].m_Radius	= radius;
+	m_PhysicsObjects.m_Entities[id]						=  id;
+
+	m_PhysicsObjects.m_BallColliders[id].m_Radius		= radius;
+	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagBallCollider;
+
 	m_PhysicsObjects.m_VerletBodies[id].m_Position		= pos;
-	m_PhysicsObjects.m_VerletBodies[id].m_OldPosition		= pos;
+	m_PhysicsObjects.m_VerletBodies[id].m_OldPosition	= pos;
 	m_PhysicsObjects.m_VerletBodies[id].m_Acceleration	= { 0.0f, 0.0f };
 	m_PhysicsObjects.m_VerletBodies[id].m_Velocity		= { 0.0f, 0.0f };
+	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagVerletObject;
+
 
 	return id;
 }

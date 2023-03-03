@@ -1,13 +1,10 @@
 #include "glm/glm.hpp"
-class PhysicsObject;
 
 struct Manifold
 {
-	PhysicsObject* a;
-	PhysicsObject* b;
+	size_t a;
+	size_t b;
 
-	glm::vec2 collisionNormal;
-	float overlap;
-
-	bool collision = false;
+	glm::vec2 collisionNormal = { 0,0 };
+	float overlap = 0;
 };

@@ -165,10 +165,7 @@
     <ClCompile Include="src\Engine\Core\Input.cpp" />
     <ClCompile Include="src\Engine\Core\Window.cpp" />
     <ClCompile Include="src\Engine\GLErrorHandler.cpp" />
-    <ClCompile Include="src\Engine\Physics\Body.cpp" />
-    <ClCompile Include="src\Engine\Physics\Collision\BallCollider.cpp" />
     <ClCompile Include="src\Engine\Physics\Collision\Collision.cpp" />
-    <ClCompile Include="src\Engine\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\Engine\Physics\World.cpp" />
     <ClCompile Include="src\Engine\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Engine\Renderer\OrthographicCameraController.cpp" />
@@ -192,12 +189,7 @@
     <ClInclude Include="src\Engine\GLErrorHandler.h" />
     <ClInclude Include="src\Engine\GLRenderer.h" />
     <ClInclude Include="src\Engine\pch.h" />
-    <ClInclude Include="src\Engine\Physics\Body.h" />
-    <ClInclude Include="src\Engine\Physics\Collision\BallCollider.h" />
-    <ClInclude Include="src\Engine\Physics\Collision\Collider.h" />
     <ClInclude Include="src\Engine\Physics\Collision\Collision.h" />
-    <ClInclude Include="src\Engine\Physics\Collision\CollisionPair.h" />
-    <ClInclude Include="src\Engine\Physics\Collision\Collisionpch.h" />
     <ClInclude Include="src\Engine\Physics\Collision\ColliderType.h" />
     <ClInclude Include="src\Engine\Physics\Collision\Manifold.h" />
     <ClInclude Include="src\Engine\Physics\Integrators\IntegratorObject.h" />

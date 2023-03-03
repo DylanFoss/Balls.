@@ -1,63 +1,62 @@
-class Body;
-struct BodyDefinition;
-class Collider;
-
-#ifndef TRANSFORM_H_INCLUDED
-#include "Engine/Physics/Transform.h"
-#define TRANSFORM_H_INCLUDED
-#endif
-
+#include "Engine/pch.h"
 #include "glm/glm.hpp"
 
-struct BodyComponent
+typedef size_t EntityID;
+typedef int Flags;
+
+template <typename T>
+using Component = std::vector<T>;
+
+struct VerletBody
 {
-	glm::vec2 m_Positon;
-	glm::vec2 m_PositionOld;
+	glm::vec2 m_Position;
+	glm::vec2 m_OldPosition;
 	glm::vec2 m_Acceleration;
 	glm::vec2 m_Velocity;
 };
 
-struct BallColliderComponent
+struct BodyMassData
+{
+	float m_Mass;
+	float m_InvMass;
+};
+
+struct BallCollider
 {
 	float m_Radius;
 };
 
-/*
-* A physics object that contains a body and a shape, which combine to have a presence
-* in the world.
-*/
-class PhysicsObject
+struct PhysicsObjects
 {
-public:
+	enum
+	{
+		kFlagVerletObject = 1 << 0,
+		kFlagBallCollider = 1 << 1,
+		kFlagAABBCollider = 1 << 2
+	};
 
-	PhysicsObject(Collider* shape, const BodyDefinition& body);
-	~PhysicsObject();
+	std::vector<EntityID> m_Entities;
+	std::vector<VerletBody> m_VerletBodies;
+	std::vector<BodyMassData> m_MassData;
+	std::vector<BallCollider> m_BallColliders;
+	std::vector<Flags> m_Flags;
 
-	PhysicsObject(const PhysicsObject& other);
-	PhysicsObject operator=(const PhysicsObject& other);
-	PhysicsObject(PhysicsObject&& other) noexcept;
-	PhysicsObject operator=(PhysicsObject&& other) noexcept;
+	EntityID CreatePhysicsObject()
+	{
+		m_Entities.emplace_back(m_Entities.size());
+		m_BallColliders.emplace_back(BallCollider());
+		m_VerletBodies.emplace_back(VerletBody());
+		m_Flags.emplace_back(0);
 
+		return static_cast<EntityID>(m_Entities.size() - 1);
+	}
 
-	void Update(float deltaTime);
-
-	const Transform* GetTransform() const;
-	Collider* GetCollider() { return m_Collider; };
-
-	glm::vec2 GetPosition() const;
-	glm::vec2 GetVelocity() const;
-
-	void OffsetPosition(const glm::vec2& pos);
-	void SetPosition(const glm::vec2& pos);
-	void SetVelocity(const glm::vec2& vel);
-	void Accelerate(const glm::vec2& acc);
-
-	float GetMass();
-	float GetInverseMass();
-
-
-private:
-	Body* m_Body;
-	Collider* m_Collider;
-	Transform m_Transform;
+	void Reserve(size_t n)
+	{
+		//m_PhysicsObjects.m_Positions.reserve(n);
+		m_Entities.reserve(n);
+		m_BallColliders.reserve(n);
+		m_VerletBodies.reserve(n);
+		m_VerletBodies.reserve(n);
+	}
 };
