@@ -16,8 +16,8 @@ namespace SpatialPartition
 
 		void AddObject(size_t physobj, const glm::vec2& pos);
 
-		GridCell* GetCell(const glm::vec2& pos);
-		GridCell* GetRelativeCell(const glm::vec2& pos);
+		inline GridCell* GetCell(const glm::vec2& pos);
+		inline GridCell* GetRelativeCell(const glm::vec2& pos);
 		std::vector<GridCell*> GetNeighbourhoodCells(const glm::vec2& pos);
 		std::vector<size_t> GetNeighbourhoodContents(const glm::vec2& pos);
 

@@ -21,6 +21,9 @@ public:
 	void BroadPhase();
 	void NarrowPhase();
 
+	void BruteForce();
+	void SpatialGrid();
+
 	EntityID CreateBall(const glm::vec2 pos, float radius);
 
 	void SetGravity(const glm::vec2& gravity) { m_Gravity = gravity; }
@@ -39,6 +42,6 @@ private:
 	//this is strictly for fun purposes only
 	float BallCannonDelay = 0.2;
 	float BallCannonCounter = 0;
-	float BallCannonShots = 1500;
+	float BallCannonShots = 3000;
 	void BallCannon(float deltaTime);
 };
