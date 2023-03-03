@@ -98,6 +98,9 @@
     <ClCompile Include="src\Engine\Physics\Collision\Collision.cpp">
       <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Physics\PartitionGrid.cpp">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Balls\Balls.h">
@@ -185,6 +188,9 @@
       <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Physics\PhysicsObject.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\PartitionGrid.h">
       <Filter>Source Files\Engine\Physics</Filter>
     </ClInclude>
   </ItemGroup>

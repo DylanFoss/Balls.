@@ -2,6 +2,8 @@
 
 //#include "Engine/Physics/Collision/Collisionpch.h"
 
+#include "Engine/Physics/PartitionGrid.h"
+
 World::World(const glm::vec2& gravity)
 	:m_Gravity(gravity), m_StepDuration(1.f/60.f), m_StepTime(0), m_SubSteps(8)
 {
