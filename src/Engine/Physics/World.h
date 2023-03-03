@@ -26,6 +26,7 @@ public:
 	void SetGravity(const glm::vec2& gravity) { m_Gravity = gravity; }
 
 	PhysicsObjects m_PhysicsObjects;
+	std::vector<Manifold> m_PotentialCollisions;
 	std::vector<Manifold> m_Collisions;
 
 private:
@@ -38,6 +39,6 @@ private:
 	//this is strictly for fun purposes only
 	float BallCannonDelay = 0.2;
 	float BallCannonCounter = 0;
-	float BallCannonShots = 3000;
+	float BallCannonShots = 1500;
 	void BallCannon(float deltaTime);
 };

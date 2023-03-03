@@ -78,12 +78,15 @@ void World::ApplyConstraints()
 //to be seperated into their own classes, but fun to mess around with now!
 void World::SolveCollisions()
 {
-	BroadPhase();
+	//BroadPhase();
 	NarrowPhase();
-	m_Collisions.clear();
 }
 
 void World::BroadPhase()
+{
+}
+
+void World::NarrowPhase()
 {
 	for (int i = 0; i < m_PhysicsObjects.m_Entities.size(); i++)
 	{
@@ -110,41 +113,22 @@ void World::BroadPhase()
 				glm::vec2 collisionNormal = glm::normalize(collisionAxis);
 				float overlap = radii - distance;
 
-				Manifold m;
-				m.a = lhs;
-				m.b = rhs;
-				m.collisionNormal = collisionNormal;
-				m.overlap = overlap;
+				constexpr float restitution = 0.75f;
+				//divide each body's individual mass by the combined mass
+				//to work out which should be offset more.
+				//float combinedMass = pair.a + pair.b;
 
-				m_Collisions.emplace_back(m);
+				glm::vec2 offset = 0.5f * overlap * collisionNormal * restitution;
+				//glm::vec2 offset = pair.overlap * pair.collisionNormal;
+
+				//pair.a->OffsetPosition((pair.b->GetMass() / combinedMass) * offset);
+				//pair.b->OffsetPosition((pair.a->GetMass() / combinedMass) * -offset);
+
+				m_PhysicsObjects.m_VerletBodies[lhs].m_Position += offset;
+				m_PhysicsObjects.m_VerletBodies[rhs].m_Position += -offset;
 			}
 		}
 	}
-}
-
-void World::NarrowPhase()
-{
-	for (Manifold& pair : m_Collisions)
-	{
-		VerletBody& a = m_PhysicsObjects.m_VerletBodies[pair.a];
-		VerletBody& b = m_PhysicsObjects.m_VerletBodies[pair.b];
-
-		constexpr float restitution = 0.75f;
-		//divide each body's individual mass by the combined mass
-		//to work out which should be offset more.
-		//float combinedMass = pair.a + pair.b;
-
-		glm::vec2 offset = 0.5f * pair.overlap * pair.collisionNormal * restitution;
-		//glm::vec2 offset = pair.overlap * pair.collisionNormal;
-
-		//pair.a->OffsetPosition((pair.b->GetMass() / combinedMass) * offset);
-		//pair.b->OffsetPosition((pair.a->GetMass() / combinedMass) * -offset);
-
-		a.m_Position = a.m_Position + offset;
-		b.m_Position = b.m_Position + -offset;
-
-	}
-	m_Collisions.clear();
 }
 
 
