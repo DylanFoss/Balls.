@@ -193,5 +193,8 @@
     <ClInclude Include="src\Engine\Physics\PartitionGrid.h">
       <Filter>Source Files\Engine\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Utils\Timer.h">
+      <Filter>Source Files\Engine\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
