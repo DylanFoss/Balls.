@@ -20,7 +20,7 @@ struct StackTimer
 		duration = end - start;
 
 		float ms = duration.count() * 1000.0f;
-		std::cout << "Timer Took: " << ms << "ms " << std::endl;
+		std::cout << "Timer Took: " << ms << "ms " << '\n';
 	}
 
 };
@@ -41,7 +41,7 @@ struct Timer
 		duration = end - start;
 
 		float ms = duration.count() * 1000.0f;
-		std::cout << "Timer Took: " << ms << "ms " << std::endl;
+		std::cout << "Timer Took: " << ms << "ms " << '\n';
 	}
 
 	Timer()
