@@ -5,6 +5,9 @@
 #include "Engine/Physics/PhysicsObject.h"
 #include "Engine/Physics/Collision/Collision.h"
 
+
+constexpr int s_NumBalls = 20;
+
 class World
 {
 public:
@@ -37,6 +40,6 @@ private:
 	//this is strictly for fun purposes only
 	float BallCannonDelay = 0.2;
 	float BallCannonCounter = 0;
-	float BallCannonShots = 3000;
+	float BallCannonShots = s_NumBalls;
 	void BallCannon(float deltaTime);
 };

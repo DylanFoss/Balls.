@@ -45,6 +45,7 @@ struct PhysicsObjects
 	{
 		m_Entities.emplace_back(m_Entities.size());
 		m_BallColliders.emplace_back(BallCollider());
+		m_MassData.emplace_back(BodyMassData());
 		m_VerletBodies.emplace_back(VerletBody());
 		m_Flags.emplace_back(0);
 
@@ -57,6 +58,7 @@ struct PhysicsObjects
 		m_Entities.reserve(n);
 		m_BallColliders.reserve(n);
 		m_VerletBodies.reserve(n);
-		m_VerletBodies.reserve(n);
+		m_MassData.reserve(n);
+		m_Flags.reserve(n);
 	}
 };

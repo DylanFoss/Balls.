@@ -8,7 +8,7 @@
 World::World(const glm::vec2& gravity)
 	:m_Gravity(gravity), m_StepDuration(1.f/60.f), m_StepTime(0), m_SubSteps(8)
 {
-	m_PhysicsObjects.Reserve(3000); 
+	m_PhysicsObjects.Reserve(s_NumBalls);
 }
 
 World::~World()
@@ -80,8 +80,8 @@ void World::ApplyConstraints()
 //to be seperated into their own classes, but fun to mess around with now!
 void World::SolveCollisions()
 {
-	//BruteForce();
-	SpatialGrid();
+	BruteForce();
+	//SpatialGrid();
 }
 
 void World::BruteForce()
@@ -114,16 +114,12 @@ void World::BruteForce()
 				constexpr float restitution = 0.75f;
 				//divide each body's individual mass by the combined mass
 				//to work out which should be offset more.
-				//float combinedMass = m_PhysicsObjects.m_MassData[lhs].m_Mass + m_PhysicsObjects.m_MassData[rhs].m_Mass;
+				float combinedMass = m_PhysicsObjects.m_MassData[lhs].m_Mass + m_PhysicsObjects.m_MassData[rhs].m_Mass;
 
 				glm::vec2 offset = 0.5f * overlap * collisionNormal * restitution;
-				//glm::vec2 offset = overlap * pair.collisionNormal * restitution;
 
-				m_PhysicsObjects.m_VerletBodies[lhs].m_Position += offset;
-				m_PhysicsObjects.m_VerletBodies[rhs].m_Position += -offset;
-
-				//m_PhysicsObjects.m_VerletBodies[lhs].m_Position += (m_PhysicsObjects.m_MassData[lhs].m_Mass / combinedMass) * offset;
-				//m_PhysicsObjects.m_VerletBodies[rhs].m_Position += (m_PhysicsObjects.m_MassData[rhs].m_Mass / combinedMass) * -offset;
+				m_PhysicsObjects.m_VerletBodies[lhs].m_Position += (m_PhysicsObjects.m_MassData[rhs].m_Mass / combinedMass) * offset;
+				m_PhysicsObjects.m_VerletBodies[rhs].m_Position += (m_PhysicsObjects.m_MassData[lhs].m_Mass / combinedMass) * -offset;
 			}
 		}
 	}
@@ -145,21 +141,21 @@ void World::SpatialGrid()
 
 			for (int k = 0; k < neighbourhood.size(); k++)
 			{
-				EntityID a = m_PhysicsObjects.m_Entities[neighbourhood[k]];
+				EntityID lhs = m_PhysicsObjects.m_Entities[neighbourhood[k]];
 				for (int l = k + 1; l < neighbourhood.size(); l++)
 				{
-					EntityID b = m_PhysicsObjects.m_Entities[neighbourhood[l]];
+					EntityID rhs = m_PhysicsObjects.m_Entities[neighbourhood[l]];
 
-					if (a == b)
+					if (lhs == rhs)
 						break;
 
-					VerletBody& lhs = m_PhysicsObjects.m_VerletBodies[a];
-					VerletBody& rhs = m_PhysicsObjects.m_VerletBodies[b];
+					VerletBody& verletBodyA = m_PhysicsObjects.m_VerletBodies[lhs];
+					VerletBody& verletBodyB = m_PhysicsObjects.m_VerletBodies[rhs];
 
-					BallCollider& colliderA = m_PhysicsObjects.m_BallColliders[a];
-					BallCollider& colliderB = m_PhysicsObjects.m_BallColliders[b];
+					BallCollider& colliderA = m_PhysicsObjects.m_BallColliders[lhs];
+					BallCollider& colliderB = m_PhysicsObjects.m_BallColliders[rhs];
 
-					glm::vec2 collisionAxis = lhs.m_Position - rhs.m_Position;
+					glm::vec2 collisionAxis = verletBodyA.m_Position - verletBodyB.m_Position;
 					float radii = (colliderA.m_Radius + colliderB.m_Radius);
 
 					//use cheaper squared distance first
@@ -171,22 +167,15 @@ void World::SpatialGrid()
 						glm::vec2 collisionNormal = glm::normalize(collisionAxis);
 						float overlap = radii - distance;
 
-
 						constexpr float restitution = 0.75f;
-
-
 						//divide each body's individual mass by the combined mass
 						//to work out which should be offset more.
-						//float combinedMass = pair.a + pair.b;
+						float combinedMass = m_PhysicsObjects.m_MassData[lhs].m_Mass + m_PhysicsObjects.m_MassData[rhs].m_Mass;
 
 						glm::vec2 offset = 0.5f * overlap * collisionNormal * restitution;
-						//glm::vec2 offset = pair.overlap * pair.collisionNormal;
 
-						//pair.a->OffsetPosition((pair.b->GetMass() / combinedMass) * offset);
-						//pair.b->OffsetPosition((pair.a->GetMass() / combinedMass) * -offset);
-
-						lhs.m_Position = lhs.m_Position + offset;
-						rhs.m_Position = rhs.m_Position + -offset;
+						m_PhysicsObjects.m_VerletBodies[lhs].m_Position += (m_PhysicsObjects.m_MassData[rhs].m_Mass / combinedMass) * offset;
+						m_PhysicsObjects.m_VerletBodies[rhs].m_Position += (m_PhysicsObjects.m_MassData[lhs].m_Mass / combinedMass) * -offset;
 					}
 				}
 			}
@@ -210,6 +199,8 @@ EntityID World::CreateBall(const glm::vec2 pos, float radius)
 	m_PhysicsObjects.m_VerletBodies[id].m_Velocity		= { 0.0f, 0.0f };
 	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagVerletObject;
 
+	m_PhysicsObjects.m_MassData[id].m_Mass = m_PhysicsObjects.m_BallColliders[id].m_Radius* m_PhysicsObjects.m_BallColliders[id].m_Radius; // should be PIr^2
+	m_PhysicsObjects.m_MassData[id].m_InvMass = 1.0f/m_PhysicsObjects.m_MassData[id].m_Mass;
 
 	return id;
 }
