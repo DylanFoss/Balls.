@@ -3,6 +3,7 @@
 //#include "Engine/Physics/Collision/Collisionpch.h"
 
 #include "Engine/Physics/PartitionGrid.h"
+#include "Engine/Utils/Timer.h"
 
 World::World(const glm::vec2& gravity)
 	:m_Gravity(gravity), m_StepDuration(1.f/60.f), m_StepTime(0), m_SubSteps(8)
@@ -17,7 +18,6 @@ World::~World()
 void World::Update(float deltaTime)
 {
 	m_StepTime += deltaTime;
-
 	if (m_StepTime > m_StepDuration)
 	{
 		for (int i = 0; i < m_SubSteps; i++)
@@ -28,8 +28,8 @@ void World::Update(float deltaTime)
 			}
 
 			ApplyGravity();
-			ApplyConstraints();
 			SolveCollisions();
+			ApplyConstraints();
 			UpdatePositions(m_StepDuration / m_SubSteps);
 		}
 		m_StepTime = 0;
@@ -61,6 +61,8 @@ void World::ApplyGravity()
 
 void World::ApplyConstraints()
 {
+	constexpr float constraintRadius = 300.f;
+
 	for (EntityID id : m_PhysicsObjects.m_Entities)
 	{
 		VerletBody& verletBody = m_PhysicsObjects.m_VerletBodies[id];
@@ -68,9 +70,9 @@ void World::ApplyConstraints()
 
 		const glm::vec2 toObj = verletBody.m_Position - glm::vec2{ 0.f, 0.f };
 		const float dist = glm::length(toObj);
-		if (dist > 300.f - collider.m_Radius)
+		if (dist > constraintRadius - collider.m_Radius)
 		{
-			verletBody.m_Position = (toObj/dist) * (300.f - collider.m_Radius);
+			verletBody.m_Position = (toObj/dist) * (constraintRadius - collider.m_Radius);
 		}
 	}
 }
@@ -78,87 +80,8 @@ void World::ApplyConstraints()
 //to be seperated into their own classes, but fun to mess around with now!
 void World::SolveCollisions()
 {
-	//BroadPhase();
-	//NarrowPhase();
-
 	//BruteForce();
 	SpatialGrid();
-}
-
-void World::BroadPhase()
-{
-
-	//for (auto& p : m_PotentialCollisions) {
-	//	if (p.a > p.b)
-	//		std::swap(p.a, p.b);
-	//}
-
-	//std::sort(m_PotentialCollisions.begin(), m_PotentialCollisions.end(), [](const Manifold& lhs, const Manifold& rhs) {
-	//	if (lhs.a < rhs.a)
-	//		return true;
-	//	else if (lhs.a == rhs.a)
-	//		return lhs.b < rhs.b;
-
-	//	return false;
-	//	});
-
-	//for (int i = 0; i < m_PotentialCollisions.size(); )
-	//{
-	//	Manifold& pair = m_PotentialCollisions[i];
-	//	m_Collisions.emplace_back(std::move(pair));
-	//	++i;
-	//	// Skip duplicate pairs by iterating i until we find a unique pair 
-	//	for (; i < m_PotentialCollisions.size();)
-	//	{
-	//		Manifold& potential_dup = m_PotentialCollisions[i];
-
-	//		if (pair.a != potential_dup.a || pair.b != potential_dup.b)
-	//			break;
-	//		++i;
-	//	}
-	//}
-	m_PotentialCollisions.clear();
-}
-
-void World::NarrowPhase()
-{
-	//for (Manifold& pair : m_Collisions)
-	//{
-	//	VerletBody& verletBodyA = m_PhysicsObjects.m_VerletBodies[pair.a];
-	//	VerletBody& verletBodyB = m_PhysicsObjects.m_VerletBodies[pair.b];
-
-	//	BallCollider& colliderA = m_PhysicsObjects.m_BallColliders[pair.a];
-	//	BallCollider& colliderB = m_PhysicsObjects.m_BallColliders[pair.b];
-
-	//	glm::vec2 collisionAxis = verletBodyA.m_Position - verletBodyB.m_Position;
-	//	float radii = (colliderA.m_Radius + colliderB.m_Radius);
-
-	//	//use cheaper squared distance first
-	//	float sqrDistance = glm::dot(collisionAxis, collisionAxis);
-
-	//	if (sqrDistance < radii * radii)
-	//	{
-	//		float distance = glm::length(collisionAxis);
-	//		glm::vec2 collisionNormal = glm::normalize(collisionAxis);
-	//		float overlap = radii - distance;
-
-
-	//		constexpr float restitution = 0.75f;
-	//		//divide each body's individual mass by the combined mass
-	//		//to work out which should be offset more.
-	//		//float combinedMass = pair.a + pair.b;
-
-	//		glm::vec2 offset = 0.5f * overlap * collisionNormal * restitution;
-	//		//glm::vec2 offset = pair.overlap * pair.collisionNormal;
-
-	//		//pair.a->OffsetPosition((pair.b->GetMass() / combinedMass) * offset);
-	//		//pair.b->OffsetPosition((pair.a->GetMass() / combinedMass) * -offset);
-
-	//		verletBodyA.m_Position = verletBodyA.m_Position + offset;
-	//		verletBodyB.m_Position = verletBodyB.m_Position + -offset;
-	//	}
-	//}
-	m_Collisions.clear();
 }
 
 void World::BruteForce()
@@ -191,16 +114,16 @@ void World::BruteForce()
 				constexpr float restitution = 0.75f;
 				//divide each body's individual mass by the combined mass
 				//to work out which should be offset more.
-				//float combinedMass = pair.a + pair.b;
+				//float combinedMass = m_PhysicsObjects.m_MassData[lhs].m_Mass + m_PhysicsObjects.m_MassData[rhs].m_Mass;
 
 				glm::vec2 offset = 0.5f * overlap * collisionNormal * restitution;
-				//glm::vec2 offset = pair.overlap * pair.collisionNormal;
-
-				//pair.a->OffsetPosition((pair.b->GetMass() / combinedMass) * offset);
-				//pair.b->OffsetPosition((pair.a->GetMass() / combinedMass) * -offset);
+				//glm::vec2 offset = overlap * pair.collisionNormal * restitution;
 
 				m_PhysicsObjects.m_VerletBodies[lhs].m_Position += offset;
 				m_PhysicsObjects.m_VerletBodies[rhs].m_Position += -offset;
+
+				//m_PhysicsObjects.m_VerletBodies[lhs].m_Position += (m_PhysicsObjects.m_MassData[lhs].m_Mass / combinedMass) * offset;
+				//m_PhysicsObjects.m_VerletBodies[rhs].m_Position += (m_PhysicsObjects.m_MassData[rhs].m_Mass / combinedMass) * -offset;
 			}
 		}
 	}
@@ -250,6 +173,8 @@ void World::SpatialGrid()
 
 
 						constexpr float restitution = 0.75f;
+
+
 						//divide each body's individual mass by the combined mass
 						//to work out which should be offset more.
 						//float combinedMass = pair.a + pair.b;

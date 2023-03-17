@@ -18,9 +18,6 @@ public:
 	void ApplyConstraints();
 	void SolveCollisions();
 
-	void BroadPhase();
-	void NarrowPhase();
-
 	void BruteForce();
 	void SpatialGrid();
 
@@ -29,8 +26,6 @@ public:
 	void SetGravity(const glm::vec2& gravity) { m_Gravity = gravity; }
 
 	PhysicsObjects m_PhysicsObjects;
-	std::vector<Manifold> m_PotentialCollisions;
-	std::vector<Manifold> m_Collisions;
 
 private:
 	glm::vec2 m_Gravity;
