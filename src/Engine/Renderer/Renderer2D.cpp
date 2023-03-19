@@ -6,10 +6,12 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-struct Vertex
+struct QuadVertex
 {
 	glm::vec2 Position;
+	glm::vec4 Color;
 	glm::vec2 TexCoord;
+	//float TexID;
 };
 
 struct LineVertex
@@ -31,8 +33,8 @@ struct RenderData
 	std::shared_ptr<Shader> QuadShader;
 
 	uint32_t QuadIndexCount = 0;
-	Vertex* QuadVertexBufferArray = nullptr;
-	Vertex* QuadVertexBufferPtr = nullptr;
+	QuadVertex* QuadVertexBufferArray = nullptr;
+	QuadVertex* QuadVertexBufferPtr = nullptr;
 
 	glm::vec4 QuadVertexPositions[4];
 
@@ -69,20 +71,23 @@ void Renderer2D::Init()
 	glClearColor(0.0f, 0.0f, 0.20f, 1.0f);
 
 	//ASSERT(s_Data.QuadVertexBufferArray == nullptr) // VertexBuffer already assigned, Init was already called.
-	s_Data.QuadVertexBufferArray = new Vertex[s_Data.MaxVertices];
+	s_Data.QuadVertexBufferArray = new QuadVertex[s_Data.MaxVertices];
 
 	GLCall(glGenVertexArrays(1, &s_Data.QuadVA));
 	GLCall(glBindVertexArray(s_Data.QuadVA));
 
 	GLCall(glCreateBuffers(1, &s_Data.QuadVB));
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, s_Data.QuadVB));
-	GLCall(glBufferData(GL_ARRAY_BUFFER, s_Data.MaxVertices * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, s_Data.MaxVertices * sizeof(QuadVertex), nullptr, GL_DYNAMIC_DRAW));
 
 	GLCall(glEnableVertexArrayAttrib(s_Data.QuadVA, 0));
-	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position)));
+	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void*)offsetof(QuadVertex, Position)));
 
 	GLCall(glEnableVertexArrayAttrib(s_Data.QuadVA, 1));
-	GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord)));
+	GLCall(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void*)offsetof(QuadVertex, Color)));
+
+	GLCall(glEnableVertexArrayAttrib(s_Data.QuadVA, 2));
+	GLCall(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (const void*)offsetof(QuadVertex, TexCoord)));
 
 	std::vector<unsigned int> indices;
 	indices.reserve(s_Data.MaxIndices);
@@ -204,15 +209,15 @@ void Renderer2D::Flush()
 	}
 }
 
-void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size)
+void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 {
 	glm::mat4 transform = glm::translate(glm::mat4(1.0f), {position.x, position.y, 0.0f})
 		* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-	DrawQuad(transform);
+	DrawQuad(transform, color);
 }
 
-void Renderer2D::DrawQuad(const glm::mat4& transform)
+void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
 {
 	if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
 	{
@@ -226,6 +231,7 @@ void Renderer2D::DrawQuad(const glm::mat4& transform)
 	for (int i = 0; i < numVerts; i++)
 	{
 		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[i];
+		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
 		s_Data.QuadVertexBufferPtr++;
 	}

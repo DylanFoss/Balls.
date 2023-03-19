@@ -14,8 +14,8 @@ public:
 	static void EndBatch();
 	static void Flush();
 
-	static void DrawQuad(const glm::vec2& position, const glm::vec2& size);
-	static void DrawQuad(const glm::mat4& transform);
+	static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& Color = { 1.0f, 1.0f, 1.0f, 1.0f });
+	static void DrawQuad(const glm::mat4& transform, const glm::vec4& Color = {1.0f, 1.0f, 1.0f, 1.0f});
 
 	static void DrawLine(const glm::vec2& point0, const glm::vec2& point1, const glm::vec4& color);
 

@@ -73,7 +73,7 @@ void Balls::Draw(float deltaTime)
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	Renderer2D::DrawQuad({ 0,0 }, { 300 * 2, 300 * 2 });
+	Renderer2D::DrawQuad({ 0,0 }, { 300 * 2, 300 * 2 }, {0.0f, 0.0f, 0.0f, 1.0f});
 
 	for (EntityID item : m_World.m_PhysicsObjects.m_Entities)
 	{
