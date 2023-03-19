@@ -184,7 +184,7 @@ void World::SpatialGrid()
 }
 
 
-EntityID World::CreateBall(const glm::vec2 pos, float radius)
+EntityID World::CreateBall(const glm::vec2 pos, float radius, const glm::vec4 color)
 {
 	EntityID id = m_PhysicsObjects.CreatePhysicsObject();
 
@@ -201,7 +201,7 @@ EntityID World::CreateBall(const glm::vec2 pos, float radius)
 	m_PhysicsObjects.m_MassData[id].m_Mass = m_PhysicsObjects.m_BallColliders[id].m_Radius* m_PhysicsObjects.m_BallColliders[id].m_Radius; // should be PIr^2
 	m_PhysicsObjects.m_MassData[id].m_InvMass = 1.0f/m_PhysicsObjects.m_MassData[id].m_Mass;
 
-	m_PhysicsObjects.m_RenderData[id].m_Color = { (rand() % 255)/255.f, (rand() % 255) / 255.f, (rand() % 255) / 255.f, 1.0f };
+	m_PhysicsObjects.m_RenderData[id].m_Color = color;
 	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagRenderable;
 
 	return id;
@@ -213,7 +213,7 @@ void World::BallCannon(float deltaTime)
 	BallCannonCounter += deltaTime;
 	if (BallCannonCounter > BallCannonDelay)
 	{
-		EntityID id = CreateBall({ 0,260 }, 5);
+		EntityID id = CreateBall({ 0,260 }, 5, { (rand() % 255) / 255.f, (rand() % 255) / 255.f, (rand() % 255) / 255.f, 1.0f });
 
 		t += deltaTime;
 		const float angle = 1.0f * sin(t) + 3.14159265358979323846 * 0.5f;

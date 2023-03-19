@@ -47,7 +47,7 @@ void Balls::Update(float deltaTime)
 
 		if (glm::length(pos) < 300.)
 		{
-			m_World.CreateBall(pos, rand() % 30 + 5);
+			m_World.CreateBall(pos, rand() % 30 + 5, { (rand() % 255) / 255.f, (rand() % 255) / 255.f, (rand() % 255) / 255.f, 1.0f });
 		}
 	}
 

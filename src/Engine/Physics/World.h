@@ -24,7 +24,7 @@ public:
 	void BruteForce();
 	void SpatialGrid();
 
-	EntityID CreateBall(const glm::vec2 pos, float radius);
+	EntityID CreateBall(const glm::vec2 pos, float radius, const glm::vec4 color);
 
 	void SetGravity(const glm::vec2& gravity) { m_Gravity = gravity; }
 
