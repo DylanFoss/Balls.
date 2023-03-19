@@ -197,10 +197,12 @@ EntityID World::CreateBall(const glm::vec2 pos, float radius)
 	m_PhysicsObjects.m_VerletBodies[id].m_OldPosition	= pos;
 	m_PhysicsObjects.m_VerletBodies[id].m_Acceleration	= { 0.0f, 0.0f };
 	m_PhysicsObjects.m_VerletBodies[id].m_Velocity		= { 0.0f, 0.0f };
-	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagVerletObject;
 
 	m_PhysicsObjects.m_MassData[id].m_Mass = m_PhysicsObjects.m_BallColliders[id].m_Radius* m_PhysicsObjects.m_BallColliders[id].m_Radius; // should be PIr^2
 	m_PhysicsObjects.m_MassData[id].m_InvMass = 1.0f/m_PhysicsObjects.m_MassData[id].m_Mass;
+
+	m_PhysicsObjects.m_RenderData[id].m_Color = { (rand() % 255)/255.f, (rand() % 255) / 255.f, (rand() % 255) / 255.f, 1.0f };
+	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagRenderable;
 
 	return id;
 }

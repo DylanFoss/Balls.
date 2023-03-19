@@ -6,7 +6,7 @@
 #include "Engine/Physics/Collision/Collision.h"
 
 
-constexpr int s_NumBalls = 20;
+constexpr int s_NumBalls = 1000;
 
 class World
 {

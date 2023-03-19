@@ -26,11 +26,16 @@ struct BallCollider
 	float m_Radius;
 };
 
+struct RenderData
+{
+	glm::vec4 m_Color;
+};
+
 struct PhysicsObjects
 {
 	enum
 	{
-		kFlagVerletObject = 1 << 0,
+		kFlagRenderable = 1 << 0,
 		kFlagBallCollider = 1 << 1,
 		kFlagAABBCollider = 1 << 2
 	};
@@ -39,6 +44,7 @@ struct PhysicsObjects
 	std::vector<VerletBody> m_VerletBodies;
 	std::vector<BodyMassData> m_MassData;
 	std::vector<BallCollider> m_BallColliders;
+	std::vector<RenderData> m_RenderData;
 	std::vector<Flags> m_Flags;
 
 	EntityID CreatePhysicsObject()
@@ -47,6 +53,7 @@ struct PhysicsObjects
 		m_BallColliders.emplace_back(BallCollider());
 		m_MassData.emplace_back(BodyMassData());
 		m_VerletBodies.emplace_back(VerletBody());
+		m_RenderData.emplace_back(RenderData());
 		m_Flags.emplace_back(0);
 
 		return static_cast<EntityID>(m_Entities.size() - 1);
@@ -59,6 +66,7 @@ struct PhysicsObjects
 		m_BallColliders.reserve(n);
 		m_VerletBodies.reserve(n);
 		m_MassData.reserve(n);
+		m_RenderData.reserve(n);
 		m_Flags.reserve(n);
 	}
 };

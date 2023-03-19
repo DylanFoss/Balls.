@@ -78,7 +78,9 @@ void Balls::Draw(float deltaTime)
 	for (EntityID item : m_World.m_PhysicsObjects.m_Entities)
 	{
 
-		Renderer2D::DrawQuad(m_World.m_PhysicsObjects.m_VerletBodies[item].m_Position, { m_World.m_PhysicsObjects.m_BallColliders[item].m_Radius * 2, m_World.m_PhysicsObjects.m_BallColliders[item].m_Radius * 2 });
+		Renderer2D::DrawQuad(m_World.m_PhysicsObjects.m_VerletBodies[item].m_Position,
+			{ m_World.m_PhysicsObjects.m_BallColliders[item].m_Radius * 2, m_World.m_PhysicsObjects.m_BallColliders[item].m_Radius * 2 },
+			m_World.m_PhysicsObjects.m_RenderData[item].m_Color);
 		Renderer2D::DrawLine(m_World.m_PhysicsObjects.m_VerletBodies[item].m_Position, m_World.m_PhysicsObjects.m_VerletBodies[item].m_Position + glm::normalize(m_World.m_PhysicsObjects.m_VerletBodies[item].m_Velocity)* m_World.m_PhysicsObjects.m_BallColliders[item].m_Radius, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 
