@@ -9,6 +9,15 @@ World::World(const glm::vec2& gravity)
 	:m_Gravity(gravity), m_StepDuration(1.f/60.f), m_StepTime(0), m_SubSteps(8)
 {
 	m_PhysicsObjects.Reserve(s_NumBalls);
+	CreateKinematicBall({ 0.0f, 0.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+	CreateKinematicBall({ -100.0f, -130.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+	CreateKinematicBall({ 100.0f, -130.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+
+	CreateKinematicBall({ 50.0f, 70.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+	CreateKinematicBall({ -50.0f, 70.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+
+	CreateKinematicBall({ 130.0f, 0.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+	CreateKinematicBall({ -130.0f, 0.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
 }
 
 World::~World()
@@ -38,7 +47,7 @@ void World::Update(float deltaTime)
 
 void World::UpdatePositions(float deltaTime)
 {
-	for (EntityID id : m_PhysicsObjects.m_Entities)
+	for (EntityID id : m_ActiveObjects)
 	{
 		VerletBody& verletBody = m_PhysicsObjects.m_VerletBodies[id];
 
@@ -51,7 +60,7 @@ void World::UpdatePositions(float deltaTime)
 
 void World::ApplyGravity()
 {
-	for (EntityID id : m_PhysicsObjects.m_Entities)
+	for (EntityID id : m_ActiveObjects)
 	{
 		VerletBody& verletBody = m_PhysicsObjects.m_VerletBodies[id];
 
@@ -63,7 +72,7 @@ void World::ApplyConstraints()
 {
 	constexpr float constraintRadius = 300.f;
 
-	for (EntityID id : m_PhysicsObjects.m_Entities)
+	for (EntityID id : m_ActiveObjects)
 	{
 		VerletBody& verletBody = m_PhysicsObjects.m_VerletBodies[id];
 		BallCollider& collider = m_PhysicsObjects.m_BallColliders[id];
@@ -91,9 +100,10 @@ void World::BruteForce()
 		EntityID lhs = m_PhysicsObjects.m_Entities[i];
 		VerletBody& verletBodyA = m_PhysicsObjects.m_VerletBodies[lhs];
 
-		for (int j = i + 1; j < m_PhysicsObjects.m_Entities.size(); j++)
+		for (int j = i+1; j < m_PhysicsObjects.m_Entities.size(); j++)
 		{
 			EntityID rhs = m_PhysicsObjects.m_Entities[j];
+			
 			VerletBody& verletBodyB = m_PhysicsObjects.m_VerletBodies[rhs];
 
 			BallCollider& colliderA = m_PhysicsObjects.m_BallColliders[lhs];
@@ -118,8 +128,12 @@ void World::BruteForce()
 
 				glm::vec2 offset = 0.5f * overlap * collisionNormal * restitution;
 
-				m_PhysicsObjects.m_VerletBodies[lhs].m_Position += (m_PhysicsObjects.m_MassData[rhs].m_Mass / combinedMass) * offset;
-				m_PhysicsObjects.m_VerletBodies[rhs].m_Position += (m_PhysicsObjects.m_MassData[lhs].m_Mass / combinedMass) * -offset;
+				bool lhsNotKinematic =  1 - m_PhysicsObjects.m_Flags[lhs] & PhysicsObjects::kFlagKinematic;
+				bool rhsNotKinematic = 1 - m_PhysicsObjects.m_Flags[rhs] & PhysicsObjects::kFlagKinematic;
+
+				m_PhysicsObjects.m_VerletBodies[lhs].m_Position += (m_PhysicsObjects.m_MassData[rhs].m_Mass / combinedMass) * lhsNotKinematic * offset;
+				m_PhysicsObjects.m_VerletBodies[rhs].m_Position += (m_PhysicsObjects.m_MassData[lhs].m_Mass / combinedMass) * rhsNotKinematic * -offset;
+				
 			}
 		}
 	}
@@ -191,6 +205,7 @@ EntityID World::CreateBall(const glm::vec2 pos, float radius, const glm::vec4 co
 	m_PhysicsObjects.m_Entities[id]						=  id;
 
 	m_PhysicsObjects.m_BallColliders[id].m_Radius		= radius;
+
 	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagBallCollider;
 
 	m_PhysicsObjects.m_VerletBodies[id].m_Position		= pos;
@@ -203,6 +218,34 @@ EntityID World::CreateBall(const glm::vec2 pos, float radius, const glm::vec4 co
 
 	m_PhysicsObjects.m_RenderData[id].m_Color = color;
 	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagRenderable;
+
+	m_ActiveObjects.push_back(id);
+
+	return id;
+}
+
+EntityID World::CreateKinematicBall(const glm::vec2 pos, float radius, const glm::vec4 color)
+{
+	EntityID id = m_PhysicsObjects.CreatePhysicsObject();
+
+	m_PhysicsObjects.m_Entities[id] = id;
+
+	m_PhysicsObjects.m_BallColliders[id].m_Radius = radius;
+
+	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagBallCollider;
+
+	m_PhysicsObjects.m_VerletBodies[id].m_Position = pos;
+	m_PhysicsObjects.m_VerletBodies[id].m_OldPosition = pos;
+	m_PhysicsObjects.m_VerletBodies[id].m_Acceleration = { 0.0f, 0.0f };
+	m_PhysicsObjects.m_VerletBodies[id].m_Velocity = { 0.0f, 0.0f };
+
+	m_PhysicsObjects.m_MassData[id].m_Mass = m_PhysicsObjects.m_BallColliders[id].m_Radius * m_PhysicsObjects.m_BallColliders[id].m_Radius; // should be PIr^2
+	m_PhysicsObjects.m_MassData[id].m_InvMass = 1.0f / m_PhysicsObjects.m_MassData[id].m_Mass;
+
+	m_PhysicsObjects.m_RenderData[id].m_Color = color;
+	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagRenderable;
+
+	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagKinematic;
 
 	return id;
 }

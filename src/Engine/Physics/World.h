@@ -6,6 +6,7 @@
 #include "Engine/Physics/Collision/Collision.h"
 
 
+
 constexpr int s_NumBalls = 1000;
 
 class World
@@ -25,10 +26,14 @@ public:
 	void SpatialGrid();
 
 	EntityID CreateBall(const glm::vec2 pos, float radius, const glm::vec4 color);
+	EntityID CreateKinematicBall(const glm::vec2 pos, float radius, const glm::vec4 color);
 
 	void SetGravity(const glm::vec2& gravity) { m_Gravity = gravity; }
 
 	PhysicsObjects m_PhysicsObjects;
+
+	//a list of physics objects to be queried each physics update.
+	std::vector<int> m_ActiveObjects;
 
 private:
 	glm::vec2 m_Gravity;

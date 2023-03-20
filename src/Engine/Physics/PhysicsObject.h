@@ -37,7 +37,8 @@ struct PhysicsObjects
 	{
 		kFlagRenderable = 1 << 0,
 		kFlagBallCollider = 1 << 1,
-		kFlagAABBCollider = 1 << 2
+		kFlagAABBCollider = 1 << 2,
+		kFlagKinematic = 1 << 3
 	};
 
 	std::vector<EntityID> m_Entities;
