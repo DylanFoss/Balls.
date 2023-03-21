@@ -95,12 +95,12 @@ void World::SolveCollisions()
 
 void World::BruteForce()
 {
-	for (int i = 0; i < m_PhysicsObjects.m_Entities.size(); i++)
+	for (int i = 0; i < m_LiveObjects.size(); i++)
 	{
 		EntityID lhs = m_PhysicsObjects.m_Entities[i];
 		VerletBody& verletBodyA = m_PhysicsObjects.m_VerletBodies[lhs];
 
-		for (int j = i+1; j < m_PhysicsObjects.m_Entities.size(); j++)
+		for (int j = i+1; j < m_LiveObjects.size(); j++)
 		{
 			EntityID rhs = m_PhysicsObjects.m_Entities[j];
 			
@@ -220,6 +220,7 @@ EntityID World::CreateBall(const glm::vec2 pos, float radius, const glm::vec4 co
 	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagRenderable;
 
 	m_ActiveObjects.push_back(id);
+	m_LiveObjects.push_back(id);
 
 	return id;
 }
@@ -246,6 +247,7 @@ EntityID World::CreateKinematicBall(const glm::vec2 pos, float radius, const glm
 	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagRenderable;
 
 	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagKinematic;
+	m_LiveObjects.push_back(id);
 
 	return id;
 }

@@ -34,6 +34,7 @@ public:
 
 	//a list of physics objects to be queried each physics update.
 	std::vector<int> m_ActiveObjects;
+	std::vector<int> m_LiveObjects;
 
 private:
 	glm::vec2 m_Gravity;
