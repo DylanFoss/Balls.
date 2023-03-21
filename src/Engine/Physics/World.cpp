@@ -226,7 +226,25 @@ EntityID World::CreateBall(const glm::vec2 pos, float radius, const glm::vec4 co
 
 EntityID World::CreateKinematicBall(const glm::vec2 pos, float radius, const glm::vec4 color)
 {
-	EntityID id = CreateBall(pos, radius, color);
+	EntityID id = m_PhysicsObjects.CreatePhysicsObject();
+
+	m_PhysicsObjects.m_Entities[id] = id;
+
+	m_PhysicsObjects.m_BallColliders[id].m_Radius = radius;
+
+	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagBallCollider;
+
+	m_PhysicsObjects.m_VerletBodies[id].m_Position = pos;
+	m_PhysicsObjects.m_VerletBodies[id].m_OldPosition = pos;
+	m_PhysicsObjects.m_VerletBodies[id].m_Acceleration = { 0.0f, 0.0f };
+	m_PhysicsObjects.m_VerletBodies[id].m_Velocity = { 0.0f, 0.0f };
+
+	m_PhysicsObjects.m_MassData[id].m_Mass = m_PhysicsObjects.m_BallColliders[id].m_Radius * m_PhysicsObjects.m_BallColliders[id].m_Radius; // should be PIr^2
+	m_PhysicsObjects.m_MassData[id].m_InvMass = 1.0f / m_PhysicsObjects.m_MassData[id].m_Mass;
+
+	m_PhysicsObjects.m_RenderData[id].m_Color = color;
+	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagRenderable;
+
 	m_PhysicsObjects.m_Flags[id] |= PhysicsObjects::kFlagKinematic;
 
 	return id;
