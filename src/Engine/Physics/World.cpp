@@ -62,8 +62,10 @@ void World::Update(float deltaTime)
 			}
 			else
 			{
-				if(m_ActiveObjects.size())
+				if (m_ActiveObjects.size())
 					m_PhysicsObjects.RemovePhysicsObject(m_ActiveObjects[0]);
+				else
+					BallCannonShots = 1000;
 			}
 
 			ApplyGravity();

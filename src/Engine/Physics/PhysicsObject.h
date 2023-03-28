@@ -1,6 +1,8 @@
 #include "Engine/pch.h"
 #include "glm/glm.hpp"
 
+#include "Engine/debug.h"
+
 //typedef size_t EntityID;
 typedef int Flags;
 
@@ -104,6 +106,7 @@ struct PhysicsObjects
 		{
 			m_EntityGen.push_back(0);
 			index = m_EntityGen.size() - 1;
+			ASSERT(index < (1 << ENTITY_INDEX_BITS));
 		}
 
 		return index;
