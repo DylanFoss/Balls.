@@ -18,11 +18,6 @@ World::World(const glm::vec2& gravity)
 
 	CreateKinematicBall({ 130.0f, 0.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
 	CreateKinematicBall({ -130.0f, 0.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
-
-	m_PhysicsObjects.RemovePhysicsObject(EntityID{0});
-	m_PhysicsObjects.RemovePhysicsObject(EntityID{ 0 });
-
-	CreateKinematicBall({ 0.0f, 0.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
 }
 
 World::~World()
@@ -154,12 +149,14 @@ void World::BruteForce()
 				float overlap = radii - distance;
 
 				constexpr float restitution = 0.75f;
+
 				//divide each body's individual mass by the combined mass
 				//to work out which should be offset more.
 				float combinedMass = m_PhysicsObjects.m_MassData[lhs].m_Mass + m_PhysicsObjects.m_MassData[rhs].m_Mass;
 
 				glm::vec2 offset = 0.5f * overlap * collisionNormal * restitution;
 
+				// using a bool multiplier as a faster branch.
 				bool lhsNotKinematic =  1 - m_PhysicsObjects.m_Flags[lhs] & PhysicsObjects::kFlagKinematic;
 				bool rhsNotKinematic = 1 - m_PhysicsObjects.m_Flags[rhs] & PhysicsObjects::kFlagKinematic;
 
@@ -235,16 +232,11 @@ EntityID World::CreateBall(const glm::vec2 pos, float radius, const glm::vec4 co
 	EntityID id = m_PhysicsObjects.CreatePhysicsObject();
 	uint32_t index = id.index();
 
-	//m_PhysicsObjects.m_Entities[id]						=  id;
-
 	m_PhysicsObjects.m_BallColliders[index].m_Radius		= radius;
 
 	m_PhysicsObjects.m_Flags[index] |= PhysicsObjects::kFlagBallCollider;
 
-	m_PhysicsObjects.m_VerletBodies[index].m_Position		= pos;
-	m_PhysicsObjects.m_VerletBodies[index].m_OldPosition	= pos;
-	m_PhysicsObjects.m_VerletBodies[index].m_Acceleration	= { 0.0f, 0.0f };
-	m_PhysicsObjects.m_VerletBodies[index].m_Velocity		= { 0.0f, 0.0f };
+	m_PhysicsObjects.m_VerletBodies[index] = { pos, pos, { 0.0f, 0.0f }, { 0.0f, 0.0f } };
 
 	m_PhysicsObjects.m_MassData[index].m_Mass = m_PhysicsObjects.m_BallColliders[index].m_Radius* m_PhysicsObjects.m_BallColliders[index].m_Radius; // should be PIr^2
 	m_PhysicsObjects.m_MassData[index].m_InvMass = 1.0f/m_PhysicsObjects.m_MassData[index].m_Mass;
@@ -263,16 +255,11 @@ EntityID World::CreateKinematicBall(const glm::vec2 pos, float radius, const glm
 	EntityID id = m_PhysicsObjects.CreatePhysicsObject();
 	uint32_t index = id.index();
 
-	//m_PhysicsObjects.m_Entities[id] = id;
-
 	m_PhysicsObjects.m_BallColliders[index].m_Radius = radius;
 
 	m_PhysicsObjects.m_Flags[index] |= PhysicsObjects::kFlagBallCollider;
 
-	m_PhysicsObjects.m_VerletBodies[index].m_Position = pos;
-	m_PhysicsObjects.m_VerletBodies[index].m_OldPosition = pos;
-	m_PhysicsObjects.m_VerletBodies[index].m_Acceleration = { 0.0f, 0.0f };
-	m_PhysicsObjects.m_VerletBodies[index].m_Velocity = { 0.0f, 0.0f };
+	m_PhysicsObjects.m_VerletBodies[index] = { pos, pos, { 0.0f, 0.0f }, { 0.0f, 0.0f } };
 
 	m_PhysicsObjects.m_MassData[index].m_Mass = m_PhysicsObjects.m_BallColliders[index].m_Radius * m_PhysicsObjects.m_BallColliders[index].m_Radius; // should be PIr^2
 	m_PhysicsObjects.m_MassData[index].m_InvMass = 1.0f / m_PhysicsObjects.m_MassData[index].m_Mass;
