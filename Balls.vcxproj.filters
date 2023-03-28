@@ -196,5 +196,8 @@
     <ClInclude Include="src\Engine\Utils\Timer.h">
       <Filter>Source Files\Engine\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\debug.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,8 +1,7 @@
 #pragma once
+#include "Engine/debug.h"
 #include<GL/glew.h>
 
-
-#define ASSERT(x) if (!(x)) __debugbreak();
 #ifdef _DEBUG
 #define GLCall(x) GLClearError();\
         x;\

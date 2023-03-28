@@ -182,6 +182,7 @@
     <ClInclude Include="src\Engine\Core\MouseCodes.h" />
     <ClInclude Include="src\Engine\Core\TimeStep.h" />
     <ClInclude Include="src\Engine\Core\Window.h" />
+    <ClInclude Include="src\Engine\debug.h" />
     <ClInclude Include="src\Engine\Events\Event.h" />
     <ClInclude Include="src\Engine\Events\KeyEvent.h" />
     <ClInclude Include="src\Engine\Events\MouseEvent.h" />
