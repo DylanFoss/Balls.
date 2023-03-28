@@ -33,8 +33,8 @@ public:
 	PhysicsObjects m_PhysicsObjects;
 
 	//a list of physics objects to be queried each physics update.
-	std::vector<int> m_ActiveObjects;
-	std::vector<int> m_LiveObjects;
+	std::vector<EntityID> m_ActiveObjects;
+	std::vector<EntityID> m_LiveObjects;
 
 private:
 	glm::vec2 m_Gravity;
