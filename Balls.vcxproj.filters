@@ -77,9 +77,6 @@
     <ClCompile Include="src\Engine\GLErrorHandler.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Balls\Ball.cpp">
-      <Filter>Source Files\Balls</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\Renderer\OrthographicCamera.cpp">
       <Filter>Source Files\Engine\Renderer</Filter>
     </ClCompile>
@@ -147,9 +144,6 @@
     </ClInclude>
     <ClInclude Include="src\Engine\pch.h">
       <Filter>Source Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Balls\Ball.h">
-      <Filter>Source Files\Balls</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Renderer\OrthographicCamera.h">
       <Filter>Source Files\Engine\Renderer</Filter>
