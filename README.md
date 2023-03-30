@@ -1,6 +1,6 @@
 # Balls.
 
-A 2D Physics simulation featuring balls of the dimensional variety, using OpenGL and C++.
+A 2D Physics simulation featuring balls of the two dimensional variety, using OpenGL and C++.
 
 ![image](https://user-images.githubusercontent.com/57671477/228808149-4036aa24-d8c4-4419-a84b-aebdbe0511d0.png)
 
