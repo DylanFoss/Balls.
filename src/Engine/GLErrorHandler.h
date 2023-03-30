@@ -1,10 +1,8 @@
 #pragma once
+#include "Engine/debug.h"
 #include<GL/glew.h>
 
-
-#define DEBUG
-#define ASSERT(x) if (!(x)) __debugbreak();
-#ifdef DEBUG
+#ifdef _DEBUG
 #define GLCall(x) GLClearError();\
         x;\
         ASSERT(GLLogCall(#x, __FILE__, __LINE__))

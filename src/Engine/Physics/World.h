@@ -2,11 +2,12 @@
 #include "glm/glm.hpp"
 #include "Engine/pch.h"
 
-#include "Engine/Physics/Collision/Collisionpch.h"
+#include "Engine/Physics/PhysicsObject.h"
 #include "Engine/Physics/Collision/Collision.h"
 
-class PhysicsObject;
 
+
+constexpr int s_NumBalls = 1000;
 
 class World
 {
@@ -21,16 +22,19 @@ public:
 	void ApplyConstraints();
 	void SolveCollisions();
 
-	void BroadPhase();
-	void NarrowPhase();
-	
-	void CreatePhysicsObject(const glm::vec2 pos, Collider* shape);
-	void CreateBall(const glm::vec2 pos, float radius);
+	void BruteForce();
+	void SpatialGrid();
+
+	EntityID CreateBall(const glm::vec2 pos, float radius, const glm::vec4 color);
+	EntityID CreateKinematicBall(const glm::vec2 pos, float radius, const glm::vec4 color);
 
 	void SetGravity(const glm::vec2& gravity) { m_Gravity = gravity; }
 
-	std::vector<PhysicsObject*> m_Physics;
-	std::vector<Manifold> m_Collisions;
+	PhysicsObjects m_PhysicsObjects;
+
+	//a list of physics objects to be queried each physics update.
+	std::vector<EntityID> m_ActiveObjects;
+	std::vector<EntityID> m_LiveObjects;
 
 private:
 	glm::vec2 m_Gravity;
@@ -40,8 +44,8 @@ private:
 	float m_SubSteps;
 
 	//this is strictly for fun purposes only
-	float BallCannonDelay = 1;
+	float BallCannonDelay = 0.2;
 	float BallCannonCounter = 0;
-	float BallCannonShots = 200;
+	float BallCannonShots = s_NumBalls;
 	void BallCannon(float deltaTime);
 };

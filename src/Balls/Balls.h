@@ -1,7 +1,6 @@
 #pragma once
 #include "Engine/GL.h"
 #include "Engine/GLRenderer.h"
-#include "Ball.h"
 
 #include "Engine/Physics/World.h"
 

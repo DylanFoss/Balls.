@@ -77,9 +77,6 @@
     <ClCompile Include="src\Engine\GLErrorHandler.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Balls\Ball.cpp">
-      <Filter>Source Files\Balls</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\Renderer\OrthographicCamera.cpp">
       <Filter>Source Files\Engine\Renderer</Filter>
     </ClCompile>
@@ -92,20 +89,14 @@
     <ClCompile Include="src\Engine\Renderer\Shader.cpp">
       <Filter>Source Files\Engine\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Physics\Body.cpp">
-      <Filter>Source Files\Engine\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Engine\Physics\PhysicsObject.cpp">
-      <Filter>Source Files\Engine\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\Physics\World.cpp">
       <Filter>Source Files\Engine\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Physics\Collision\Collision.cpp">
       <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Physics\Collision\BallCollider.cpp">
-      <Filter>Source Files\Engine\Physics\Collision</Filter>
+    <ClCompile Include="src\Engine\Physics\PartitionGrid.cpp">
+      <Filter>Source Files\Engine\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,9 +145,6 @@
     <ClInclude Include="src\Engine\pch.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Balls\Ball.h">
-      <Filter>Source Files\Balls</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Renderer\OrthographicCamera.h">
       <Filter>Source Files\Engine\Renderer</Filter>
     </ClInclude>
@@ -168,9 +156,6 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Renderer\Shader.h">
       <Filter>Source Files\Engine\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Physics\Body.h">
-      <Filter>Source Files\Engine\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Physics\Integrators\IntegratorObject.h">
       <Filter>Source Files\Engine\Physics\Integrators</Filter>
@@ -184,32 +169,29 @@
     <ClInclude Include="src\Engine\Physics\Transform.h">
       <Filter>Source Files\Engine\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Physics\PhysicsObject.h">
-      <Filter>Source Files\Engine\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Physics\World.h">
       <Filter>Source Files\Engine\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Physics\Collision\Collision.h">
       <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Physics\Collision\BallCollider.h">
-      <Filter>Source Files\Engine\Physics\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Physics\Collision\Collider.h">
-      <Filter>Source Files\Engine\Physics\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Physics\Collision\Collisionpch.h">
-      <Filter>Source Files\Engine\Physics\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Physics\Collision\ColliderType.h">
-      <Filter>Source Files\Engine\Physics\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Physics\Collision\CollisionPair.h">
       <Filter>Source Files\Engine\Physics\Collision</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Physics\Collision\Manifold.h">
       <Filter>Source Files\Engine\Physics\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\PhysicsObject.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\PartitionGrid.h">
+      <Filter>Source Files\Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Utils\Timer.h">
+      <Filter>Source Files\Engine\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\debug.h">
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

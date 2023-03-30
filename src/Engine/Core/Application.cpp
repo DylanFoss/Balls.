@@ -37,7 +37,9 @@ int Application::Run()
 		m_Window->OnUpdate();
 		t1 = t2;
 
-		float fps = 1.0f / deltaTime;
+		float fps = 1.0f;
+		if (deltaTime)
+			fps = 1.0f / deltaTime;
 		avgfps = 0.9f * avgfps + (1.0f - 0.9f) * fps;
 		float drawTime = deltaTime * 1000;
 
@@ -45,6 +47,7 @@ int Application::Run()
 
 		if (windowCount > 0.1f)
 		{
+
 			std::stringstream ss;
 			ss.precision(4);
 			ss << "Balls. - [ Avg. FPS: " << avgfps << ", " << "Draw Time: " << drawTime << " ms " << ']' << '\n';

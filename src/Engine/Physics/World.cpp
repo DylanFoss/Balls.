@@ -1,27 +1,54 @@
 #include "World.h"
 
-#include "Engine/Physics/PhysicsObject.h"
-#include "Engine/Physics/Body.h"
-#include "Engine/Physics/Collision/Collisionpch.h"
+//#include "Engine/Physics/Collision/Collisionpch.h"
+
+#include "Engine/Physics/PartitionGrid.h"
+#include "Engine/Utils/Timer.h"
 
 World::World(const glm::vec2& gravity)
-	:m_Gravity(gravity), m_StepDuration(0.00694f), m_StepTime(0), m_SubSteps(8)
+	:m_Gravity(gravity), m_StepDuration(1.f/60.f), m_StepTime(0), m_SubSteps(8)
 {
+	m_PhysicsObjects.Reserve(s_NumBalls);
+	CreateKinematicBall({ 0.0f, 0.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+	CreateKinematicBall({ -100.0f, -130.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+	CreateKinematicBall({ 100.0f, -130.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+
+	CreateKinematicBall({ 50.0f, 70.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+	CreateKinematicBall({ -50.0f, 70.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+
+	CreateKinematicBall({ 130.0f, 0.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
+	CreateKinematicBall({ -130.0f, 0.0f }, 30.f, { 1.0f, 0.0f, 1.0f, 1.0f });
 }
 
 World::~World()
 {
-	for (PhysicsObject* obj : m_Physics)
-		delete obj;
-	m_Physics.clear();
 }
 
 void World::Update(float deltaTime)
 {
 	m_StepTime += deltaTime;
-
 	if (m_StepTime > m_StepDuration)
 	{
+		for (EntityID& item : m_ActiveObjects)
+		{
+			if (!m_PhysicsObjects.IsAlive(item))
+			{
+				EntityID temp = m_ActiveObjects[m_ActiveObjects.size() - 1];
+				item = temp;
+				m_ActiveObjects.pop_back();
+			}
+		}
+
+		for (EntityID& item : m_LiveObjects)
+		{
+			if (!m_PhysicsObjects.IsAlive(item))
+			{
+				EntityID temp = m_LiveObjects[m_LiveObjects.size() - 1];
+				item = temp;
+				m_LiveObjects.pop_back();
+			}
+		}
+
 		for (int i = 0; i < m_SubSteps; i++)
 		{
 			if (BallCannonShots > 0)
@@ -30,13 +57,15 @@ void World::Update(float deltaTime)
 			}
 			else
 			{
-				m_Physics.clear();
-				BallCannonShots = 200;
+				if (m_ActiveObjects.size())
+					m_PhysicsObjects.RemovePhysicsObject(m_ActiveObjects[0]);
+				else
+					BallCannonShots = 1000;
 			}
 
 			ApplyGravity();
-			ApplyConstraints();
 			SolveCollisions();
+			ApplyConstraints();
 			UpdatePositions(m_StepDuration / m_SubSteps);
 		}
 		m_StepTime = 0;
@@ -45,27 +74,41 @@ void World::Update(float deltaTime)
 
 void World::UpdatePositions(float deltaTime)
 {
-	for (PhysicsObject* obj : m_Physics)
-		obj->Update(deltaTime);
+	for (EntityID id : m_ActiveObjects)
+	{
+		VerletBody& verletBody = m_PhysicsObjects.m_VerletBodies[id.index()];
+
+		verletBody.m_Velocity = verletBody.m_Position - verletBody.m_OldPosition;
+		verletBody.m_OldPosition = verletBody.m_Position;
+		verletBody.m_Position = verletBody.m_Position + verletBody.m_Velocity + verletBody.m_Acceleration * deltaTime * deltaTime;
+		verletBody.m_Acceleration = { 0.0f, 0.0f };
+	}
 }
 
 void World::ApplyGravity()
 {
-	for (PhysicsObject* obj : m_Physics)
-		obj->Accelerate(m_Gravity);
+	for (EntityID id : m_ActiveObjects)
+	{
+		VerletBody& verletBody = m_PhysicsObjects.m_VerletBodies[id.index()];
+
+		verletBody.m_Acceleration = verletBody.m_Acceleration + m_Gravity;
+	}
 }
 
 void World::ApplyConstraints()
 {
-	for (PhysicsObject* obj : m_Physics)
-	{
-		BallCollider* circle = static_cast<BallCollider*>(obj->GetCollider());
+	constexpr float constraintRadius = 300.f;
 
-		const glm::vec2 toObj = obj->GetPosition() - glm::vec2{ 0.f, 0.f };
+	for (EntityID id : m_ActiveObjects)
+	{
+		VerletBody& verletBody = m_PhysicsObjects.m_VerletBodies[id.index()];
+		BallCollider& collider = m_PhysicsObjects.m_BallColliders[id.index()];
+
+		const glm::vec2 toObj = verletBody.m_Position - glm::vec2{ 0.f, 0.f };
 		const float dist = glm::length(toObj);
-		if (dist > 300.f - circle->GetRadius())
+		if (dist > constraintRadius - collider.m_Radius)
 		{
-			obj->SetPosition((toObj/dist) * (300.f - circle->GetRadius()));
+			verletBody.m_Position = (toObj/dist) * (constraintRadius - collider.m_Radius);
 		}
 	}
 }
@@ -73,90 +116,175 @@ void World::ApplyConstraints()
 //to be seperated into their own classes, but fun to mess around with now!
 void World::SolveCollisions()
 {
-	BroadPhase();
-	NarrowPhase();
-	m_Collisions.clear();
+	BruteForce();
+	//SpatialGrid();
 }
 
-void World::BroadPhase()
+void World::BruteForce()
 {
-	for (int i = 0; i < m_Physics.size(); i++)
+	for (int i = 0; i < m_LiveObjects.size(); i++)
 	{
-		PhysicsObject* lhs = m_Physics[i];
-		for (int j = i + 1; j < m_Physics.size(); j++)
+		uint32_t lhs = m_LiveObjects[i].index();
+		VerletBody& verletBodyA = m_PhysicsObjects.m_VerletBodies[lhs];
+
+		for (int j = i+1; j < m_LiveObjects.size(); j++)
 		{
-			PhysicsObject* rhs = m_Physics[j];
-
-			Manifold m = lhs->GetCollider()->TestCollision(lhs->GetTransform(), rhs->GetCollider(), rhs->GetTransform());
-
-			if (m.collision)
-			{
-				m.a = lhs;
-				m.b = rhs;
-				m_Collisions.emplace_back(m);
-			}
+			uint32_t rhs = m_LiveObjects[j].index();
 			
+			VerletBody& verletBodyB = m_PhysicsObjects.m_VerletBodies[rhs];
+
+			BallCollider& colliderA = m_PhysicsObjects.m_BallColliders[lhs];
+			BallCollider& colliderB = m_PhysicsObjects.m_BallColliders[rhs];
+
+			glm::vec2 collisionAxis = verletBodyA.m_Position - verletBodyB.m_Position;
+			float radii = (colliderA.m_Radius + colliderB.m_Radius);
+
+			//use cheaper squared distance first
+			float sqrDistance = glm::dot(collisionAxis, collisionAxis);
+
+			if (sqrDistance < radii * radii)
+			{
+				float distance = glm::length(collisionAxis);
+				glm::vec2 collisionNormal = glm::normalize(collisionAxis);
+				float overlap = radii - distance;
+
+				constexpr float restitution = 0.75f;
+
+				//divide each body's individual mass by the combined mass
+				//to work out which should be offset more.
+				float combinedMass = m_PhysicsObjects.m_MassData[lhs].m_Mass + m_PhysicsObjects.m_MassData[rhs].m_Mass;
+
+				glm::vec2 offset = 0.5f * overlap * collisionNormal * restitution;
+
+				// using a bool multiplier as a faster branch.
+				bool lhsNotKinematic =  1 - m_PhysicsObjects.m_Flags[lhs] & PhysicsObjects::kFlagKinematic;
+				bool rhsNotKinematic = 1 - m_PhysicsObjects.m_Flags[rhs] & PhysicsObjects::kFlagKinematic;
+
+				m_PhysicsObjects.m_VerletBodies[lhs].m_Position += (m_PhysicsObjects.m_MassData[rhs].m_Mass / combinedMass) * lhsNotKinematic * offset;
+				m_PhysicsObjects.m_VerletBodies[rhs].m_Position += (m_PhysicsObjects.m_MassData[lhs].m_Mass / combinedMass) * rhsNotKinematic * -offset;
+				
+			}
 		}
 	}
+
 }
 
-void World::NarrowPhase()
+void World::SpatialGrid()
 {
-	for (Manifold& pair : m_Collisions)
-	{
-		//divide each body's individual mass by the combined mass
-		//to work out which should be offset more.
-		float combinedMass = pair.a->GetMass() + pair.b->GetMass();
+	//SpatialPartition::Grid grid = SpatialPartition::Grid({ 0,0 }, 60, 60, 10);
 
-		//glm::vec2 offset = 0.5f * overlap * collisionNormal;
-		glm::vec2 offset = pair.overlap * pair.collisionNormal;
+	//for (size_t po : m_PhysicsObjects.m_Entities)
+	//	grid.AddObject(po, m_PhysicsObjects.m_VerletBodies[po].m_Position);
 
-		pair.a->OffsetPosition((pair.b->GetMass() / combinedMass) * offset);
-		pair.b->OffsetPosition((pair.a->GetMass() / combinedMass) * -offset);
+	//for (int y = 1; y < grid.Height() - 1; y++)
+	//{
+	//	for (int x = 1; x < grid.Width() - 1; x++)
+	//	{
+	//		std::vector<size_t> neighbourhood = grid.GetNeighbourhoodContents({ x,y });
 
-		//let's not delete the ptrs
-		pair.a = nullptr;
-		pair.b = nullptr;
-	}
+	//		for (int k = 0; k < neighbourhood.size(); k++)
+	//		{
+	//			EntityID lhs = m_PhysicsObjects.m_Entities[neighbourhood[k]];
+	//			for (int l = k + 1; l < neighbourhood.size(); l++)
+	//			{
+	//				EntityID rhs = m_PhysicsObjects.m_Entities[neighbourhood[l]];
+
+	//				if (lhs == rhs)
+	//					break;
+
+	//				VerletBody& verletBodyA = m_PhysicsObjects.m_VerletBodies[lhs];
+	//				VerletBody& verletBodyB = m_PhysicsObjects.m_VerletBodies[rhs];
+
+	//				BallCollider& colliderA = m_PhysicsObjects.m_BallColliders[lhs];
+	//				BallCollider& colliderB = m_PhysicsObjects.m_BallColliders[rhs];
+
+	//				glm::vec2 collisionAxis = verletBodyA.m_Position - verletBodyB.m_Position;
+	//				float radii = (colliderA.m_Radius + colliderB.m_Radius);
+
+	//				//use cheaper squared distance first
+	//				float sqrDistance = glm::dot(collisionAxis, collisionAxis);
+
+	//				if (sqrDistance < radii * radii)
+	//				{
+	//					float distance = glm::length(collisionAxis);
+	//					glm::vec2 collisionNormal = glm::normalize(collisionAxis);
+	//					float overlap = radii - distance;
+
+	//					constexpr float restitution = 0.75f;
+	//					//divide each body's individual mass by the combined mass
+	//					//to work out which should be offset more.
+	//					float combinedMass = m_PhysicsObjects.m_MassData[lhs].m_Mass + m_PhysicsObjects.m_MassData[rhs].m_Mass;
+
+	//					glm::vec2 offset = 0.5f * overlap * collisionNormal * restitution;
+
+	//					m_PhysicsObjects.m_VerletBodies[lhs].m_Position += (m_PhysicsObjects.m_MassData[rhs].m_Mass / combinedMass) * offset;
+	//					m_PhysicsObjects.m_VerletBodies[rhs].m_Position += (m_PhysicsObjects.m_MassData[lhs].m_Mass / combinedMass) * -offset;
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 
-void World::CreatePhysicsObject(const glm::vec2 pos, Collider* shape)
+
+EntityID World::CreateBall(const glm::vec2 pos, float radius, const glm::vec4 color)
 {
-	Collider* concreteShape;
-	switch (shape->GetType())
-	{
-	case(ColliderType::BALL):
-		concreteShape = static_cast<BallCollider*>(shape);
-		break;
-	case(ColliderType::AABB):
-		break;
-	default:
-		std::cout << "No valid type provided." << '\n';
-		break;
-	}
+	EntityID id = m_PhysicsObjects.CreatePhysicsObject();
+	uint32_t index = id.index();
 
-	BodyDefinition bd;
-	bd.m_Position = pos;
+	m_PhysicsObjects.m_BallColliders[index].m_Radius		= radius;
 
-	m_Physics.emplace_back(new PhysicsObject(shape, bd));
+	m_PhysicsObjects.m_Flags[index] |= PhysicsObjects::kFlagBallCollider;
+
+	m_PhysicsObjects.m_VerletBodies[index] = { pos, pos, { 0.0f, 0.0f }, { 0.0f, 0.0f } };
+
+	m_PhysicsObjects.m_MassData[index].m_Mass = m_PhysicsObjects.m_BallColliders[index].m_Radius* m_PhysicsObjects.m_BallColliders[index].m_Radius; // should be PIr^2
+	m_PhysicsObjects.m_MassData[index].m_InvMass = 1.0f/m_PhysicsObjects.m_MassData[index].m_Mass;
+
+	m_PhysicsObjects.m_RenderData[index].m_Color = color;
+	m_PhysicsObjects.m_Flags[index] |= PhysicsObjects::kFlagRenderable;
+
+	m_ActiveObjects.push_back(id);
+	m_LiveObjects.push_back(id);
+
+	return id;
 }
 
-void World::CreateBall(const glm::vec2 pos, float radius)
+EntityID World::CreateKinematicBall(const glm::vec2 pos, float radius, const glm::vec4 color)
 {
-	BodyDefinition bd;
-	bd.m_Position = pos;
+	EntityID id = m_PhysicsObjects.CreatePhysicsObject();
+	uint32_t index = id.index();
 
-	BallCollider* c = new BallCollider(radius);
-	m_Physics.emplace_back(new PhysicsObject(c, bd));
+	m_PhysicsObjects.m_BallColliders[index].m_Radius = radius;
+
+	m_PhysicsObjects.m_Flags[index] |= PhysicsObjects::kFlagBallCollider;
+
+	m_PhysicsObjects.m_VerletBodies[index] = { pos, pos, { 0.0f, 0.0f }, { 0.0f, 0.0f } };
+
+	m_PhysicsObjects.m_MassData[index].m_Mass = m_PhysicsObjects.m_BallColliders[index].m_Radius * m_PhysicsObjects.m_BallColliders[index].m_Radius; // should be PIr^2
+	m_PhysicsObjects.m_MassData[index].m_InvMass = 1.0f / m_PhysicsObjects.m_MassData[index].m_Mass;
+
+	m_PhysicsObjects.m_RenderData[index].m_Color = color;
+	m_PhysicsObjects.m_Flags[index] |= PhysicsObjects::kFlagRenderable;
+
+	m_PhysicsObjects.m_Flags[index] |= PhysicsObjects::kFlagKinematic;
+	m_LiveObjects.push_back(id);
+
+	return id;
 }
 
+float t = 0;
 void World::BallCannon(float deltaTime)
 {
 	BallCannonCounter += deltaTime;
 	if (BallCannonCounter > BallCannonDelay)
 	{
-		CreateBall({ 0,260 }, 10);
-		m_Physics.back()->SetVelocity({ -(rand() % 6 - 3), (rand() % 2 + 1) } );
+		EntityID id = CreateBall({ 0,260 }, 5, { (rand() % 255) / 255.f, (rand() % 255) / 255.f, (rand() % 255) / 255.f, 1.0f });
+
+		t += deltaTime;
+		const float angle = 1.0f * sin(t) + 3.14159265358979323846 * 0.5f;
+		m_PhysicsObjects.m_VerletBodies[id.index()].m_OldPosition = glm::vec2{ cos(angle), sin(angle) } + m_PhysicsObjects.m_VerletBodies[id.index()].m_Position;
+
 
 		BallCannonCounter = 0;
 		BallCannonShots--;
